@@ -33,7 +33,7 @@ class SPM_uni_chart:
         if "k" in paramaters: 
             self.k = paramaters["k"]    
 
-    def check_ooc(self,stat: float) -> bool:
+    def check_ooc(self,stat: float,t) -> bool:
         pass
     
     def ub_lb(self) -> np.array:
