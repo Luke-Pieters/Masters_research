@@ -49,4 +49,44 @@ class HWMA(SPM_uni_chart):
             return (self.phi**2)*(self.sig2)
         else:
             return ((self.phi**2) + (((1-self.phi)**2)/(t-1)))*(self.sig2)
+
+#Extended HWMA SCHEME    
+class EHWMA(SPM_uni_chart):
+    def chart_stat(self,series) -> float:
+        pass
+
+    def chart_var(self,t) -> float:   
+        pass
     
+#EWMA SCHEME    
+class EWMA(SPM_uni_chart):
+    def chart_stat(self,series) -> float:
+        pass
+
+    def chart_var(self,t) -> float:   
+        pass 
+  
+#Extended EWMA SCHEME    
+class EEWMA(SPM_uni_chart):
+    def chart_stat(self,series) -> float:
+        pass
+
+    def chart_var(self,t) -> float:   
+        pass  
+    
+#Modified EWMA SCHEME    
+class MEWMA(SPM_uni_chart):
+    def chart_stat(self,series) -> float:
+        pass
+
+    def chart_var(self,t) -> float:   
+        pass
+    
+    
+    
+       
+#class (SPM_uni_chart):
+#    def chart_stat(self,series) -> float:
+
+    
+ #   def chart_var(self,t) -> float:
