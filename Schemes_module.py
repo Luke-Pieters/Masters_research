@@ -6,16 +6,16 @@ import numpy as np
 class SPM_uni_chart:
     ''' 
     Statistical Process Monitoring Univariate scheme 
+    @params:
+        mean_0  : 
+        sig2_0  : Varinace 
+        L       : 
     
-    mean_0  : 
-    sig2_0  : Varinace 
-    L       : 
+        Optional:
     
-    Optional:
-    
-    phi :
-    phi2: 
-    k   : 
+        phi     :
+        phi2    : 
+        k       :    
     
     '''
     def __init__(self,mean_0,sig2_0,L,**paramaters) -> None:
@@ -95,7 +95,7 @@ class EWMA(SPM_uni_chart):
 
     def chart_var(self,t) -> float:   
         c1 = self.phi/(2-self.phi)
-        c2 = 1 - (1-self.phi)**(2*t)
+        c2 = 1 - ((1-self.phi)**(2*t))
         return (self.sig2)*c1*c2
   
 #Extended EWMA SCHEME    

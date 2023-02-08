@@ -1,6 +1,9 @@
 import numpy as np
 import scipy.stats as sts
 import Schemes_module as spm
+from time import time
+from datetime import timedelta
+from ProgressBar_module import printProgressBar
 
 
 def spm_simulate(chart_obj,distribution,tau=1,mu_0=0,sig_0=1,max_it=1000):
@@ -25,9 +28,28 @@ def spm_simulate(chart_obj,distribution,tau=1,mu_0=0,sig_0=1,max_it=1000):
     return t - tau +1 
 
 
-def spm_iterate(n,chart_obj,distribution):
+def spm_iterate(n,chart_obj,distribution,tau=1,rep=1):
     '''iterate simulate function n times for set chart, return ARL,SDRL and MRL'''
-    pass
+    start_time = time()
+    t_arr = np.array([])
+    
+    printProgressBar(iteration=0,total=n,prefix='Run {}'.format(rep))
+    
+    for i in range(n):
+        printProgressBar(iteration=i,total=n,prefix='Run {}'.format(rep))
+        t_arr = np.append(t_arr,spm_simulate(chart_obj=chart_obj,distribution=distribution,tau=tau))
+        
+    ARL = np.mean(t_arr)
+    SDRL = np.std(t_arr)
+    MRL = np.median(t_arr)
+    printProgressBar(iteration=n,total=n,prefix='Run {}'.format(rep))
+ 
+    run_time =np.round(time()-start_time+0.4,decimals=0)
+    print("Time: {} ".format(timedelta(seconds=run_time)))
+    
+    return [ARL,SDRL,MRL]
+        
+    
 
 def spm_optimize_h(chart_obj,n,initial_h,target_ARL=200,tol=0.01,max_its=1000):
     '''run iteratations for set chart with set parameters and use 
@@ -50,8 +72,11 @@ def spm_optimize_h(chart_obj,n,initial_h,target_ARL=200,tol=0.01,max_its=1000):
 #dist.mean()
 #dist.std()
 
-test_chart = spm.HWMA(0,1,L=2.6,phi=0.1)
-dist = sts.norm(loc=10,scale=1)
+test_chart = spm.EHWMA(0,1,L=2.794,phi=0.5,phi2=0.25)
+dist = sts.norm(loc=0,scale=1)
 
-first_t = spm_simulate(chart_obj=test_chart,distribution=dist,tau=1,max_it=1000)
-print(first_t)
+#first_t = spm_simulate(chart_obj=test_chart,distribution=dist,tau=1,max_it=1000)
+#print(first_t)
+
+m = spm_iterate(n=1000,chart_obj=test_chart,distribution=dist)
+print(m)
