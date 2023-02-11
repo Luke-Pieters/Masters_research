@@ -52,6 +52,9 @@ class SPM_uni_chart:
 
         return [lb,ub]
 
+    def change_L(self,new_L):
+        self.L = new_L
+
 
 #HWMA SCHEME   
 class HWMA(SPM_uni_chart):
