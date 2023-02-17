@@ -55,7 +55,7 @@ def spm_iterate(n,chart_obj,distribution,tau=1,L=None):
         
     
 
-def spm_optimize_h(chart_obj,n,initial_h,target_ARL=200,tol=0.01,max_its=1000,bounds=(0,3)):
+def spm_optimize_h(chart_obj,n,initial_h,target_ARL=200,tol=1,max_its=1000,bounds=(0,3)):
     '''run iteratations for set chart with set parameters and use 
     linear interpolation to itteratively find best h to achieve |ARL-target_ARL|<tol'''
     start_time_op = time()
@@ -76,11 +76,9 @@ def spm_optimize_h(chart_obj,n,initial_h,target_ARL=200,tol=0.01,max_its=1000,bo
 
     return min_func_results.x
 
-    # linear interpolation:
-    # x = X1 + (y-Y1)(X2-X1)/(Y2-Y1)
-    # x = x to get y
-    
-    pass
+# linear interpolation:
+# x = X1 + (y-Y1)(X2-X1)/(Y2-Y1)
+# x = x to get y
 
 
 #how to sample from distribution
@@ -93,15 +91,15 @@ def spm_optimize_h(chart_obj,n,initial_h,target_ARL=200,tol=0.01,max_its=1000,bo
 #dist.mean()
 #dist.std()
 
-test_chart = spm.EHWMA(0,1,L=2.794,phi=0.5,phi2=0.25)
-dist = sts.norm(loc=0,scale=1)
+# test_chart = spm.EEWMA(0,1,L=2.794,phi=0.1,phi2=0.01)
+# dist = sts.norm(loc=0,scale=1)
 
-#first_t = spm_simulate(chart_obj=test_chart,distribution=dist,tau=1,max_it=1000)
-#print(first_t)
+# first_t = spm_simulate(chart_obj=test_chart,distribution=dist,tau=1,max_it=2)
+# print(first_t)
 
-#m = spm_iterate(n=10000,chart_obj=test_chart,distribution=dist)
-m = spm_optimize_h(n=500,chart_obj=test_chart,initial_h=2.6,tol=1,max_its=5)
-print(m)
+# #m = spm_iterate(n=10000,chart_obj=test_chart,distribution=dist)
+# m = spm_optimize_h(n=500,chart_obj=test_chart,initial_h=2.6,tol=1,max_its=5)
+# print(m)
 
 #from scipy.optimize import show_options
 #show_options(solver='minimize',method="Nelder-Mead")

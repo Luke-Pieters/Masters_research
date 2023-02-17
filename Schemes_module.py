@@ -1,5 +1,6 @@
 import numpy as np
 
+
 #==============================================================
 #== UNIVARIATE SCHEMES ========================================
 #==============================================================
@@ -18,9 +19,9 @@ class SPM_uni_chart:
         k       :    
     
     '''
-    def __init__(self,mean_0,sig2_0,L,**paramaters) -> None:
+    def __init__(self,mean_0=0,sig2_0=1,L=2.6,**paramaters) -> None:
         self.mean = mean_0
-        self.sig2 = sig2_0
+        self.sig2 = sig2_0 #var
         self.L = L
         self.chart_history = np.array([mean_0])
         #phi and phi1 
@@ -54,6 +55,20 @@ class SPM_uni_chart:
 
     def change_L(self,new_L):
         self.L = new_L
+
+    def change_parameters(self,**paramaters):
+        #phi and phi1 
+        if "phi" in paramaters: 
+            self.phi = paramaters["phi"]
+            
+        #phi2    
+        if "phi2" in paramaters: 
+            self.phi2 = paramaters["phi2"]
+        
+        #k for modified EWMA and HWMA  
+        if "k" in paramaters: 
+            self.k = paramaters["k"]
+
 
 
 #HWMA SCHEME   
@@ -109,13 +124,18 @@ class EEWMA(SPM_uni_chart):
         return St
 
     def chart_var(self,t) -> float:   
-        c1 = (self.phi**2)+(self.phi2**2)
-        c2 = 1 - (1- self.phi +self.phi2)**(2*t)
-        c3 = 2*(self.phi-self.phi2) - ((self.phi-self.phi2)**2)
-        c4 = 2*self.phi*self.phi2*(1-self.phi + self.phi2)
-        c5 = 1- ((1-self.phi+self.phi2)**(2*t -2))
-        c6 = c3
-        return self.sig2*(c1*(c2/c3) - c4*(c5/c6))
+        c1 = np.longdouble((self.phi**2)+(self.phi2**2))
+        c2 = np.longdouble(1 - (1- self.phi +self.phi2)**(2*t))
+        c3 = np.longdouble(2*(self.phi-self.phi2) - ((self.phi-self.phi2)**2))
+        c4 = np.longdouble(2*self.phi*self.phi2*(1-self.phi + self.phi2))
+        c5 = np.longdouble(1- ((1-self.phi+self.phi2)**(2*t -2)))
+
+        a1 = np.longdouble(c1*c2 - c4*c5)
+        a2 = c3
+
+        # print(a1,a2)
+
+        return self.sig2*(a1/a2)
     
 #Modified EWMA SCHEME    
 class MEWMA(SPM_uni_chart):
@@ -134,8 +154,5 @@ class MEWMA(SPM_uni_chart):
     
     
        
-#class (SPM_uni_chart):
-#    def chart_stat(self,series) -> float:
 
-    
- #   def chart_var(self,t) -> float:
+
