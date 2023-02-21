@@ -7,7 +7,7 @@ from datetime import timedelta
 from ProgressBar_module import printProgressBar
 
 
-def spm_simulate(chart_obj,distribution,tau=1,mu_0=0,sig_0=1,max_it=1000):
+def spm_simulate(chart_obj,distribution,tau=1,mu_0=0,sig_0=1,max_it=1000,standardise=False):
     '''simulate for a chart with set parameters untill OOC, returns the first OOC t'''
     Xt= np.array([])
     Xt = np.append(Xt,mu_0) #X_0
@@ -22,14 +22,17 @@ def spm_simulate(chart_obj,distribution,tau=1,mu_0=0,sig_0=1,max_it=1000):
             St = chart_obj.chart_stat(Xt)
         else:
             #sample from given distribution, and standardise
-            Xt= np.append(Xt, (distribution.rvs(1)-dist_mean)/dist_std)
+            if standardise:
+                Xt= np.append(Xt, (distribution.rvs(1)-dist_mean)/dist_std)
+            else:    
+                Xt= np.append(Xt, distribution.rvs(1))
             St = chart_obj.chart_stat(Xt)
             ooc = chart_obj.check_ooc(St,t=t)
             
     return t - tau +1 
 
 
-def spm_iterate(n,chart_obj,distribution,tau=1,L=None):
+def spm_iterate(n,chart_obj,distribution,tau=1,L=None,standardise=False):
     '''iterate simulate function n times for set chart, return ARL,SDRL and MRL'''
     start_time = time()
     t_arr = np.array([])
@@ -41,7 +44,7 @@ def spm_iterate(n,chart_obj,distribution,tau=1,L=None):
     
     for i in range(n):
         printProgressBar(iteration=i,total=n,prefix='Iterate Progress')
-        t_arr = np.append(t_arr,spm_simulate(chart_obj=chart_obj,distribution=distribution,tau=tau))
+        t_arr = np.append(t_arr,spm_simulate(chart_obj=chart_obj,distribution=distribution,tau=tau,standardise=standardise))
         
     ARL = np.mean(t_arr)
     SDRL = np.std(t_arr)

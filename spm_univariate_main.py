@@ -5,6 +5,8 @@ import Schemes_module as spm_schemes
 import scipy.stats as sts
 from os import makedirs
 import logging
+from time import time
+from datetime import timedelta
 
 logging.basicConfig(format='%(message)s')
 log = logging.getLogger(__name__)
@@ -13,26 +15,26 @@ log = logging.getLogger(__name__)
 #==========================================================================
 
 #ITERATE PARAMETERS
-n=500
-tau = 1
+n=800
+tau = 1 
 
 #CHART TO TEST
-chart = spm_schemes.EEWMA()
+chart = spm_schemes.HWMA()
 chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name)
 
 #SHIFT SIZES 
-delta = [0,0.25]
-# delta = np.arange(0,3.25,0.25)
+# delta = [0,0.25]
+delta = np.arange(0,3.25,0.25)
 
 print(delta)
 
 #CHART PARAMETERS 
-phi_arr = [0.1,0.2]
+phi_arr = [0.1,0.25,0.5]
 
-phi2_arr = [0.01,0.02,0.05,0.09,
-            0.01,0.02,0.1,0.15]
+# phi2_arr = [0.01,0.02,0.05,0.09,
+#             0.01,0.02,0.1,0.15]
             # 0.1,0.2,0.3,0.4,
             # 0.1,0.3,0.6,0.8]
 
@@ -41,7 +43,7 @@ phi2_arr = [0.01,0.02,0.05,0.09,
 #         1,2,3,4,
 #         1,2,3,4]
 
-L_arr = [2.798]*8 #should be len= sum of (len of parameters)
+L_arr = [2.514,2.767,2.807] #should be len= sum of (len of parameters)
 
 #DISTRIBUTION TO SIMULATE FROM
 # dist = sts.norm(loc=0,scale=1)
@@ -100,6 +102,8 @@ if len(L_arr) != total_parameters:
 #==========================================================================
 #SIMULATIONS
 #==========================================================================
+start_time = time()
+
 for d in delta:
     dist = dist = sts.norm(loc=d,scale=1)
     print('========================')
@@ -119,7 +123,7 @@ for d in delta:
             print("Parameters:","Phi: {:.2f}".format(parms_in_use),"L: {:.2f}".format(L_arr[i])) 
 
 
-        results = spm_sim.spm_iterate(chart_obj=chart,distribution=dist,n=n,tau=tau) #ARL,SDRL,MRL 
+        results = spm_sim.spm_iterate(chart_obj=chart,distribution=dist,n=n,tau=tau,standardise=False) #ARL,SDRL,MRL 
 
         
         if 'phi2_arr' in globals():
@@ -158,6 +162,9 @@ filepath = "results/univariate_results"
 makedirs(filepath, exist_ok=True) 
 
 #save resulst 
+
+run_time =np.round(time()-start_time+0.4,decimals=0)
+print("Total Run-Time: {} ".format(timedelta(seconds=run_time)))
 
 #OUTPUT
 print(output_df)
