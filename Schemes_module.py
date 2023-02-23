@@ -1,6 +1,5 @@
 import numpy as np
 
-
 #==============================================================
 #== UNIVARIATE SCHEMES ========================================
 #==============================================================
@@ -8,15 +7,19 @@ class SPM_uni_chart:
     ''' 
     Statistical Process Monitoring Univariate scheme 
     @params:
-        mean_0  : 
-        sig2_0  : Varinace 
-        L       : 
+        mean_0   - Optional  : IC mean of process (float) ; Defualts to 0
+        sig2_0   - Optional  : IC variance of process (float) ; Defualts to 1
+        L        - Optional  : CL parameter for chart_obj ; Defualts to None
     
-        Optional:
-    
-        phi     :
-        phi2    : 
-        k       :    
+        phi     - Optional : main smoothing parameter used by chart_object (float) ; should be in (0,1]
+        phi2    - Optional : second smoothing parameter used by some charts (float) ; should be in [0,phi)
+        k       - Optional : modified parameter used by modified charts (float) ; 
+
+    @functions
+         check_ooc          :
+         lb_ub              :
+         change_L           :
+         change_parameters  :
     
     '''
     def __init__(self,mean_0=0,sig2_0=1,L=2.6,**paramaters) -> None:

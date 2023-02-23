@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
-import spm_sim_module as spm_sim
-import Schemes_module as spm_schemes
+import spm_multivariate_sim_module as spm_sim
+import Multivariate_Schemes_module as spm_schemes
 import scipy.stats as sts
 from os import makedirs
 import logging
@@ -11,7 +11,7 @@ from datetime import timedelta
 logging.basicConfig(format='%(message)s')
 log = logging.getLogger(__name__)
 #==========================================================================
-#UNIVARIATE SIMULATIONS
+#MULTIVARIATE SIMULATIONS
 #==========================================================================
 
 #==========================================================================
@@ -19,14 +19,16 @@ log = logging.getLogger(__name__)
 #==========================================================================
 
 #ITERATE PARAMETERS
-n=500
+n=50
 tau = 1 
+p=4
 
 #CHART TO TEST
-chart = spm_schemes.HWMA()
+chart = spm_schemes.HWMA(p=p)
 chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name)
+print("Dimentions: {}".format(p))
 
 #SHIFT SIZES 
 # delta = [0,0.25]
@@ -105,8 +107,8 @@ if len(L_arr) != total_parameters:
         exit()
 
 #setup and set folders to save results
-filepath = "./results/univariate_results"
-filename = filepath + "/" + chart_name + "_ARL_SDRL_MRL_results.csv"
+filepath = "./results/multivariate_results"
+filename = filepath + "/" + chart_name + "_p{}_ARL_SDRL_MRL_results.csv".format(p)
 makedirs(filepath, exist_ok=True) 
 
 #==========================================================================
@@ -116,7 +118,10 @@ start_time = time()
 
 for d in delta:
     #DISTRIBUTION TO SAMPLE FROM 
-    dist = dist = sts.norm(loc=d,scale=1)
+
+    mu1 = np.sqrt((d**2)/p)
+
+    dist = dist = sts.norm(loc=mu1,scale=1)
     print('========================')
     print("Delta: {:.2f}".format(d))
     print('========================')
@@ -134,7 +139,7 @@ for d in delta:
             print("Parameters:","Phi: {:.2f}".format(parms_in_use),"L: {:.2f}".format(L_arr[i])) 
 
 
-        results = spm_sim.spm_iterate(chart_obj=chart,distribution=dist,n=n,tau=tau,standardise=False) #ARL,SDRL,MRL 
+        results = spm_sim.spm_iterate(p=p,chart_obj=chart,distribution=dist,n=n,tau=tau,standardise=False) #ARL,SDRL,MRL 
 
         
         if 'phi2_arr' in globals():
