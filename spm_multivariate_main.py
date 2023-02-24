@@ -21,10 +21,10 @@ log = logging.getLogger(__name__)
 #ITERATE PARAMETERS
 n=50
 tau = 1 
-p=4
+p=10
 
 #CHART TO TEST
-chart = spm_schemes.HWMA(p=p)
+chart = spm_schemes.MEWMA(p=p)
 chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name)
@@ -41,16 +41,26 @@ print(delta)
 phi_arr = [0.1,0.25,0.5]
 
 # phi2_arr = [0.01,0.02,0.05,0.09,
-#             0.01,0.02,0.1,0.15]
-            # 0.1,0.2,0.3,0.4,
-            # 0.1,0.3,0.6,0.8]
+#             0.01,0.02,0.1,0.15,
+#              0.1,0.2,0.3,0.4]
 
-# k_arr = [1,2,3,4,
-#         1,2,3,4,
-#         1,2,3,4,
-#         1,2,3,4]
+k_arr = [1,2,3,4,
+        1,2,3,4,
+        1,2,3,4]
 
-L_arr = [2.514,2.767,2.807] #should be len= sum of (len of parameters)
+L_arr = [2.516,
+2.54,
+2.6,
+2.772,
+2.763,
+2.762,
+2.804,
+2.803,
+2.794,
+2.804,
+2.809,
+2.801,
+] #should be len= sum of (len of parameters)
 
 #DISTRIBUTION TO SIMULATE FROM
 # dist = sts.norm(loc=0,scale=1)
@@ -117,8 +127,7 @@ makedirs(filepath, exist_ok=True)
 start_time = time()
 
 for d in delta:
-    #DISTRIBUTION TO SAMPLE FROM 
-
+    # DISTRIBUTION TO SAMPLE FROM 
     mu1 = np.sqrt((d**2)/p)
 
     dist = dist = sts.norm(loc=mu1,scale=1)

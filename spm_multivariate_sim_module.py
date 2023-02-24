@@ -1,7 +1,7 @@
 import numpy as np
 import scipy.stats as sts
 from scipy.optimize import minimize
-import Schemes_module as spm
+import Multivariate_Schemes_module as spm
 from time import time
 from datetime import timedelta
 from ProgressBar_module import printProgressBar
@@ -24,7 +24,7 @@ def spm_simulate(chart_obj,distribution,p=2,tau=1,mu_0=0,sig_0=1,max_it=1000,sta
     @Returns:
         t - tau +1 
     '''
-    Xt = [np.array(mu_0)] #X_0
+    Xt = [chart_obj.mean] #X_0
     ooc = False
     t=0
     dist_mean = distribution.mean()
@@ -124,3 +124,16 @@ def spm_optimize_L(chart_obj,n,p,initial_L,target_ARL=200,tol=1,max_its=10,bound
     print("Optimization Time: {} ".format(timedelta(seconds=run_time_op)))
 
     return min_func_results.x
+
+
+p=4
+
+a=[1,2]
+
+
+test_chart = spm.EHWMA(L=2.794,phi=0.1,phi2=0.01,p=p)
+dist = sts.norm(loc=0,scale=1)
+
+first_t = spm_simulate(chart_obj=test_chart,distribution=dist,tau=1,max_it=2,p=4)
+print(first_t)
+print(test_chart.chart_history)
