@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 #==========================================================================
 
 #ITERATE PARAMETERS
-n=50
+n=1000
 tau = 1 
 
 #CHART TO TEST
@@ -29,8 +29,9 @@ chart_name = chart.__class__.__name__
 print("Chart: " + chart_name)
 
 #SHIFT SIZES 
+delta = [0]
 # delta = [0,0.25]
-delta = np.arange(0,3.25,0.25)
+# delta = np.arange(0,3.25,0.25)
 
 print("Shift Sizes:")
 print(delta)
@@ -47,7 +48,7 @@ k_arr = [1,2,3,4,
         1,2,3,4,
         1,2,3,4]
 
-L_arr = [2.516,
+L_arr = [4,
 2.54,
 2.6,
 2.772,
@@ -145,7 +146,7 @@ for d in delta:
             print("Parameters:","Phi: {:.2f}".format(parms_in_use),"L: {:.2f}".format(L_arr[i])) 
 
 
-        results = spm_sim.spm_iterate(chart_obj=chart,distribution=dist,n=n,tau=tau,standardise=False) #ARL,SDRL,MRL 
+        results = spm_sim.spm_iterate(chart_obj=chart,distribution=dist,n=n,tau=tau,standardise=False,L=L_arr[i]) #ARL,SDRL,MRL 
 
         
         if 'phi2_arr' in globals():
