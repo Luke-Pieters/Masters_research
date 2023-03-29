@@ -85,6 +85,9 @@ class SPM_Multi_chart:
         if "k" in paramaters: 
             self.k = paramaters["k"]
 
+    def reset_chart(self):
+        self.chart_history = [self.mean]
+
 #HWMA SCHEME   
 class HWMA(SPM_Multi_chart):
     def chart_stat(self,series) -> np.array:

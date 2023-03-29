@@ -72,6 +72,9 @@ class SPM_uni_chart:
         if "k" in paramaters: 
             self.k = paramaters["k"]
 
+    def reset_chart(self):
+        self.chart_history = np.array([self.mean])
+
 
 
 #HWMA SCHEME   

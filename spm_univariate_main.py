@@ -19,11 +19,11 @@ log = logging.getLogger(__name__)
 #==========================================================================
 
 #ITERATE PARAMETERS
-n=1000
+n=10000
 tau = 1 
 
 #CHART TO TEST
-chart = spm_schemes.MEWMA()
+chart = spm_schemes.EWMA()
 chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name)
@@ -44,23 +44,24 @@ phi_arr = [0.1,0.25,0.5]
 #              0.1,0.2,0.3,0.4]
 
 
-k_arr = [1,2,3,4,
-        1,2,3,4,
-        1,2,3,4]
+# k_arr = [1,2,3,4,
+#         1,2,3,4,
+#         1,2,3,4]
 
-L_arr = [4,
-2.54,
-2.6,
-2.772,
-2.763,
-2.762,
-2.804,
-2.803,
-2.794,
-2.804,
-2.809,
-2.801,
-] #should be len= sum of (len of parameters)
+L_arr = [2.483,
+2.687,
+2.778]
+
+# 2.772,
+# 2.763,
+# 2.762,
+# 2.804,
+# 2.803,
+# 2.794,
+# 2.804,
+# 2.809,
+# 2.801,
+# ] #should be len= sum of (len of parameters)
 
 #DISTRIBUTION TO SIMULATE FROM
 # dist = sts.norm(loc=0,scale=1)
@@ -79,6 +80,7 @@ if 'phi2_arr' in globals():
 
     #ouput df
     output_df = pd.DataFrame(columns=['ARL','SDRL','MRL','L','Phi','Phi2','Delta'])
+
 elif 'k_arr' in globals():
     #check parameters match chart
     accepted_charts = ["MEWMA","MHWMA"]
@@ -128,7 +130,7 @@ start_time = time()
 
 for d in delta:
     #DISTRIBUTION TO SAMPLE FROM 
-    dist = dist = sts.norm(loc=d,scale=1)
+    dist = sts.norm(loc=d,scale=1)
     print('========================')
     print("Delta: {:.2f}".format(d))
     print('========================')
@@ -148,29 +150,30 @@ for d in delta:
 
         results = spm_sim.spm_iterate(chart_obj=chart,distribution=dist,n=n,tau=tau,standardise=False,L=L_arr[i]) #ARL,SDRL,MRL 
 
-        
+        print(results)
+
         if 'phi2_arr' in globals():
-            newrow = pd.Series({'ARL':results[0],
-                                'SDRL':results[1],
-                                'MRL':results[2],
+            newrow = pd.Series({'ARL':results['ARL'],
+                                'SDRL':results['SDRL'],
+                                'MRL':results['MRL'],
                                 'L':L_arr[i],
                                 'Phi':parms_in_use[0],
                                 'Phi2':parms_in_use[1],
                                 'Delta': d})
             output_df = pd.concat([output_df,newrow.to_frame().T],ignore_index=True)
         elif 'k_arr' in globals():
-            newrow = pd.Series({'ARL':results[0],
-                                'SDRL':results[1],
-                                'MRL':results[2],
+            newrow = pd.Series({'ARL':results['ARL'],
+                                'SDRL':results['SDRL'],
+                                'MRL':results['MRL'],
                                 'L':L_arr[i],
                                 'Phi':parms_in_use[0],
                                 'k':parms_in_use[1],
                                 'Delta': d})
             output_df = pd.concat([output_df,newrow.to_frame().T],ignore_index=True)
         else:
-            newrow = pd.Series({'ARL':results[0],
-                                'SDRL':results[1],
-                                'MRL':results[2],
+            newrow = pd.Series({'ARL':results['ARL'],
+                                'SDRL':results['SDRL'],
+                                'MRL':results['MRL'],
                                 'L':L_arr[i],
                                 'Phi':parms_in_use,
                                 'Delta': d})
