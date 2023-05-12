@@ -122,6 +122,22 @@ class EHWMA(SPM_Multi_chart):
             c6=t-2
             return (self.sig2)*(c1 + ((c2/c3)**2) + ((c4/c5)**2)*(c6))
 
+#Modified HWMA SCHEME
+class MHWMA(SPM_Multi_chart):
+    def chart_stat(self,series) -> float:
+        St = self.phi*series[-1] + (1-self.phi)*np.mean(series[:-1]) + self.k*(series[-1]-series[-2])
+        self.chart_history = np.append(self.chart_history,St)
+        return St
+
+    def chart_var(self,t) -> float:   
+        if t ==1:
+            return self.sig2*((self.phi+self.k)**2)
+        else:
+            c1 = (self.phi+self.k)**2
+            c2 = (1-self.phi)/(t-1)
+            c3 = (c2 - self.k)**2
+            c4 = (t-2)
+            return (self.sig2)*(c1 + c3 + c4*(c2**2))
 
 #EWMA SCHEME    
 class EWMA(SPM_Multi_chart):
