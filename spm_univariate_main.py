@@ -23,15 +23,15 @@ n=10000
 tau = 1 
 
 #CHART TO TEST
-chart = spm_schemes.EWMA()
+chart = spm_schemes.HWMA()
 chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name)
 
 #SHIFT SIZES 
-delta = [0]
+# delta = [0]
 # delta = [0,0.25]
-# delta = np.arange(0,3.25,0.25)
+delta = np.arange(0,3.25,0.25)
 
 print("Shift Sizes:")
 print(delta)
@@ -48,9 +48,10 @@ phi_arr = [0.1,0.25,0.5]
 #         1,2,3,4,
 #         1,2,3,4]
 
-L_arr = [2.483,
-2.687,
-2.778]
+L_arr = [2.514,
+2.767,
+2.807,
+]
 
 # 2.772,
 # 2.763,

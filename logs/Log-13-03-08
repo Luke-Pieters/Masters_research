@@ -1,0 +1,19 @@
+13:03:08,573 root INFO Running Optimize for MHWMA(0.1,1)
+13:31:12,404 root INFO Optimal L for MHWMA(0.1,1):  [2.79296875]
+13:31:12,405 root INFO Running Optimize for MHWMA(0.1,2)
+13:55:44,282 root INFO Optimal L for MHWMA(0.1,2):  [2.78867187]
+13:55:44,283 root INFO Running Optimize for MHWMA(0.1,3)
+14:17:18,679 root INFO Optimal L for MHWMA(0.1,3):  [2.79296875]
+14:17:18,679 root INFO Running Optimize for MHWMA(0.1,4)
+14:36:57,883 root INFO Optimal L for MHWMA(0.1,4):  [2.79296875]
+14:36:57,883 root INFO Running Optimize for MHWMA(0.1,5)
+14:57:22,602 root INFO Optimal L for MHWMA(0.1,5):  [2.79296875]
+14:57:22,612 root INFO Running Optimize for MHWMA(0.25,1)
+15:21:32,408 root INFO Optimal L for MHWMA(0.25,1):  [2.79296875]
+15:21:32,408 root INFO Running Optimize for MHWMA(0.25,2)
+15:47:21,543 root INFO Optimal L for MHWMA(0.25,2):  [2.79296875]
+15:47:21,544 root INFO Running Optimize for MHWMA(0.25,3)
+16:16:00,101 root INFO Optimal L for MHWMA(0.25,3):  [2.78867187]
+16:16:00,102 root INFO Running Optimize for MHWMA(0.25,4)
+16:35:53,684 root INFO Optimal L for MHWMA(0.25,4):  [2.79296875]
+16:35:53,684 root INFO Running Optimize for MHWMA(0.25,5)
