@@ -37,7 +37,7 @@ print("Shift Sizes:")
 print(delta)
 
 #CHART PARAMETERS 
-phi_arr = [0.1,0.25,0.5]
+phi_arr = [0.1,0.25,0.5,0.9]
 
 # phi2_arr = [0.01,0.02,0.05,0.09,
 #             0.01,0.02,0.1,0.15,
@@ -51,6 +51,7 @@ phi_arr = [0.1,0.25,0.5]
 L_arr = [2.514,
 2.767,
 2.807,
+2.8
 ]
 
 # 2.772,
@@ -80,7 +81,7 @@ if 'phi2_arr' in globals():
     sim_parameters = np.stack([sim_parameters,phi2_arr],axis=-1)
 
     #ouput df
-    output_df = pd.DataFrame(columns=['ARL','SDRL','MRL','L','Phi','Phi2','Delta'])
+    output_df = pd.DataFrame(columns=['ARL','SDRL','MRL','L','Phi','Phi2','Delta','Parameter_string'])
 
 elif 'k_arr' in globals():
     #check parameters match chart
@@ -94,7 +95,7 @@ elif 'k_arr' in globals():
     sim_parameters = np.stack([sim_parameters,k_arr],axis=-1)
 
     #ouput df
-    output_df = pd.DataFrame(columns=['ARL','SDRL','MRL','L','Phi','k','Delta'])    
+    output_df = pd.DataFrame(columns=['ARL','SDRL','MRL','L','Phi','k','Delta','Parameter_string'])    
 else:
     #check parameters match chart
     accepted_charts = ["EWMA","HWMA"]
@@ -106,7 +107,7 @@ else:
     sim_parameters = phi_arr
 
     #ouput df
-    output_df = pd.DataFrame(columns=['ARL','SDRL','MRL','L','Phi','Delta'])
+    output_df = pd.DataFrame(columns=['ARL','SDRL','MRL','L','Phi','Delta','Parameter_string'])
 
 
 print("Simulation Parameters:")
@@ -141,12 +142,15 @@ for d in delta:
         if 'phi2_arr' in globals():
             chart.change_parameters(phi=parms_in_use[0],phi2=parms_in_use[1])
             print("Parameters:","Phi: {:.2f}".format(parms_in_use[0]),"Phi2: {:.2f}".format(parms_in_use[1]),"L: {:.2f}".format(L_arr[i]))
+            parm_str = f'phi={parms_in_use[0]},phi2={parms_in_use[1]}'
         elif 'k_arr' in globals():
             chart.change_parameters(phi=parms_in_use[0],k=parms_in_use[1])
             print("Parameters:","Phi: {:.2f}".format(parms_in_use[0]),"k: {:.2f}".format(parms_in_use[1]),"L: {:.2f}".format(L_arr[i]))
+            parm_str = f'phi={parms_in_use[0]},k={parms_in_use[1]}'
         else:
             chart.change_parameters(phi=parms_in_use)  
             print("Parameters:","Phi: {:.2f}".format(parms_in_use),"L: {:.2f}".format(L_arr[i])) 
+            parm_str = f'phi={parms_in_use[0]}'
 
 
         results = spm_sim.spm_iterate(chart_obj=chart,distribution=dist,n=n,tau=tau,standardise=False,L=L_arr[i]) #ARL,SDRL,MRL 
@@ -160,8 +164,9 @@ for d in delta:
                                 'L':L_arr[i],
                                 'Phi':parms_in_use[0],
                                 'Phi2':parms_in_use[1],
-                                'Delta': d})
-            output_df = pd.concat([output_df,newrow.to_frame().T],ignore_index=True)
+                                'Delta': d,
+                                'Parameter_string': parm_str})
+            
         elif 'k_arr' in globals():
             newrow = pd.Series({'ARL':results['ARL'],
                                 'SDRL':results['SDRL'],
@@ -169,17 +174,19 @@ for d in delta:
                                 'L':L_arr[i],
                                 'Phi':parms_in_use[0],
                                 'k':parms_in_use[1],
-                                'Delta': d})
-            output_df = pd.concat([output_df,newrow.to_frame().T],ignore_index=True)
+                                'Delta': d,
+                                'Parameter_string': parm_str})
+            
         else:
             newrow = pd.Series({'ARL':results['ARL'],
                                 'SDRL':results['SDRL'],
                                 'MRL':results['MRL'],
                                 'L':L_arr[i],
                                 'Phi':parms_in_use,
-                                'Delta': d})
-            output_df = pd.concat([output_df,newrow.to_frame().T],ignore_index=True)
-
+                                'Delta': d,
+                                'Parameter_string': parm_str})
+    
+        output_df = pd.concat([output_df,newrow.to_frame().T],ignore_index=True)
         output_df.to_csv(filename,index=False,mode='w') #update csv file 
 
 #==========================================================================
