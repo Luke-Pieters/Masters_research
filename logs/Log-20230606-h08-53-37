@@ -1,0 +1,9 @@
+08:53:37,366 root INFO Running Optimize for MEWMA(0.1,-0.05)
+09:21:22,863 root INFO Optimal L for MEWMA(0.1,-0.05):  [2.40625]
+09:21:22,864 root INFO Running Optimize for MEWMA(0.25,-0.125)
+09:39:05,722 root INFO Optimal L for MEWMA(0.25,-0.125):  [2.5953125]
+09:39:05,723 root INFO Running Optimize for MEWMA(0.5,-0.25)
+09:55:17,467 root INFO Optimal L for MEWMA(0.5,-0.25):  [2.72421875]
+09:55:17,467 root INFO Running Optimize for MEWMA(0.9,-0.45)
+10:11:44,645 root INFO Optimal L for MEWMA(0.9,-0.45):  [2.77578125]
+10:11:44,646 root INFO Optimization Complete for MEWMA

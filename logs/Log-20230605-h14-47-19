@@ -1,0 +1,13 @@
+14:47:19,635 root INFO Running Optimize for EEWMA(0.5,0.1)
+15:07:53,899 root INFO Optimal L for EEWMA(0.5,0.1):  [2.78867187]
+15:07:53,900 root INFO Running Optimize for EEWMA(0.5,0.2)
+15:28:52,286 root INFO Optimal L for EEWMA(0.5,0.2):  [2.78867187]
+15:28:52,286 root INFO Running Optimize for EEWMA(0.5,0.4)
+15:50:42,605 root INFO Optimal L for EEWMA(0.5,0.4):  [2.78867187]
+15:50:42,605 root INFO Running Optimize for EEWMA(0.9,0.2)
+16:08:32,932 root INFO Optimal L for EEWMA(0.9,0.2):  [2.81015625]
+16:08:32,932 root INFO Running Optimize for EEWMA(0.9,0.5)
+16:26:06,775 root INFO Optimal L for EEWMA(0.9,0.5):  [2.8015625]
+16:26:06,776 root INFO Running Optimize for EEWMA(0.9,0.8)
+16:46:29,844 root INFO Optimal L for EEWMA(0.9,0.8):  [2.79296875]
+16:46:29,844 root INFO Optimization Complete for EEWMA

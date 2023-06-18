@@ -7,6 +7,7 @@ from os import makedirs
 import logging
 from time import time
 from datetime import timedelta
+import json
 
 logging.basicConfig(format='%(message)s')
 log = logging.getLogger(__name__)
@@ -19,19 +20,17 @@ log = logging.getLogger(__name__)
 #==========================================================================
 
 #ITERATE PARAMETERS
-n=10000
+n=20000
 tau = 1 
 
 #CHART TO TEST
-chart = spm_schemes.HWMA()
+chart = spm_schemes.EEWMA()
 chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name)
 
 #SHIFT SIZES 
-# delta = [0]
-# delta = [0,0.25]
-delta = np.arange(0,3.25,0.25)
+delta = np.arange(0.25,3.25,0.25)
 
 print("Shift Sizes:")
 print(delta)
@@ -39,34 +38,20 @@ print(delta)
 #CHART PARAMETERS 
 phi_arr = [0.1,0.25,0.5,0.9]
 
-# phi2_arr = [0.01,0.02,0.05,0.09,
-#             0.01,0.02,0.1,0.15,
-#              0.1,0.2,0.3,0.4]
-
+phi2_arr = {0.1: [0.01,0.05,0.09],
+            0.25: [0.05,0.1,0.2],
+            0.5: [0.1,0.2,0.4],
+            0.9: [0.2,0.5,0.8]} 
 
 # k_arr = [1,2,3,4,
 #         1,2,3,4,
 #         1,2,3,4]
 
-L_arr = [2.514,
-2.767,
-2.807,
-2.8
-]
+use_k = False
+opt_k = lambda x: -x/2
 
-# 2.772,
-# 2.763,
-# 2.762,
-# 2.804,
-# 2.803,
-# 2.794,
-# 2.804,
-# 2.809,
-# 2.801,
-# ] #should be len= sum of (len of parameters)
-
-#DISTRIBUTION TO SIMULATE FROM
-# dist = sts.norm(loc=0,scale=1)
+with open(f'results\{chart_name}_optimal_L.json') as json_file:
+       L = json.load(json_file)
 
 
 if 'phi2_arr' in globals():
@@ -77,13 +62,15 @@ if 'phi2_arr' in globals():
         exit()
 
     #parameters 
-    sim_parameters = np.repeat(phi_arr,4)
-    sim_parameters = np.stack([sim_parameters,phi2_arr],axis=-1)
+    sim_parameters = []
+    for phi in phi_arr:
+        for phi2 in phi2_arr[phi]:
+            sim_parameters += [phi,phi2]
 
     #ouput df
     output_df = pd.DataFrame(columns=['ARL','SDRL','MRL','L','Phi','Phi2','Delta','Parameter_string'])
 
-elif 'k_arr' in globals():
+elif use_k:
     #check parameters match chart
     accepted_charts = ["MEWMA","MHWMA"]
     if chart_name not in accepted_charts:
@@ -91,8 +78,9 @@ elif 'k_arr' in globals():
         exit()
 
     #parameters
-    sim_parameters = np.repeat(phi_arr,4)
-    sim_parameters = np.stack([sim_parameters,k_arr],axis=-1)
+    sim_parameters = []
+    for phi in phi_arr:
+        sim_parameters += [phi,opt_k(phi)]
 
     #ouput df
     output_df = pd.DataFrame(columns=['ARL','SDRL','MRL','L','Phi','k','Delta','Parameter_string'])    
@@ -116,9 +104,9 @@ print(sim_parameters)
 total_parameters = len(sim_parameters)
 
 #Check L_arr Length
-if len(L_arr) != total_parameters:
-        log.warning('(!) Error: L array not correct length')
-        exit()
+# if len(L_arr.values) != total_parameters:
+#         log.warning('(!) Error: L array not correct length')
+#         exit()
 
 #setup and set folders to save results
 filepath = "./results/univariate_results"
@@ -139,21 +127,29 @@ for d in delta:
     for i in range(total_parameters):
         parms_in_use = sim_parameters[i]
         
+        #select parameters
         if 'phi2_arr' in globals():
-            chart.change_parameters(phi=parms_in_use[0],phi2=parms_in_use[1])
-            print("Parameters:","Phi: {:.2f}".format(parms_in_use[0]),"Phi2: {:.2f}".format(parms_in_use[1]),"L: {:.2f}".format(L_arr[i]))
-            parm_str = f'phi={parms_in_use[0]},phi2={parms_in_use[1]}'
-        elif 'k_arr' in globals():
-            chart.change_parameters(phi=parms_in_use[0],k=parms_in_use[1])
-            print("Parameters:","Phi: {:.2f}".format(parms_in_use[0]),"k: {:.2f}".format(parms_in_use[1]),"L: {:.2f}".format(L_arr[i]))
-            parm_str = f'phi={parms_in_use[0]},k={parms_in_use[1]}'
+            phi = parms_in_use[0]
+            phi2 = parms_in_use[1]
+            L = L_arr[str(phi)][str(phi2)]
+            chart.change_parameters(phi=phi,phi2=phi2)
+            print(f"Parameters: Phi: {phi}, Phi2: {phi2}, L: {L}")
+            parm_str = f'phi={phi},phi2={phi2}'
+        elif use_k:
+            phi = parms_in_use[0]
+            k = parms_in_use[1]
+            L = L_arr[str(phi)]
+            chart.change_parameters(phi=phi,k=k)
+            print(f"Parameters: Phi: {phi}, K: {k}, L: {L}")
+            parm_str = f'phi={phi},k={phi2}'
         else:
-            chart.change_parameters(phi=parms_in_use)  
-            print("Parameters:","Phi: {:.2f}".format(parms_in_use),"L: {:.2f}".format(L_arr[i])) 
-            parm_str = f'phi={parms_in_use[0]}'
+            phi = parms_in_use
+            L = L_arr[phi]
+            chart.change_parameters(phi=phi)  
+            print(f"Parameters: Phi: {phi}, L: {L}") 
+            parm_str = f'phi={phi}'
 
-
-        results = spm_sim.spm_iterate(chart_obj=chart,distribution=dist,n=n,tau=tau,standardise=False,L=L_arr[i]) #ARL,SDRL,MRL 
+        results = spm_sim.spm_iterate(chart_obj=chart,distribution=dist,n=n,tau=tau,standardise=False,L=L) #ARL,SDRL,MRL 
 
         print(results)
 
@@ -161,19 +157,19 @@ for d in delta:
             newrow = pd.Series({'ARL':results['ARL'],
                                 'SDRL':results['SDRL'],
                                 'MRL':results['MRL'],
-                                'L':L_arr[i],
-                                'Phi':parms_in_use[0],
-                                'Phi2':parms_in_use[1],
+                                'L':L,
+                                'Phi':phi,
+                                'Phi2':phi2,
                                 'Delta': d,
                                 'Parameter_string': parm_str})
             
-        elif 'k_arr' in globals():
+        elif use_k in globals():
             newrow = pd.Series({'ARL':results['ARL'],
                                 'SDRL':results['SDRL'],
                                 'MRL':results['MRL'],
-                                'L':L_arr[i],
-                                'Phi':parms_in_use[0],
-                                'k':parms_in_use[1],
+                                'L':L,
+                                'Phi':phi,
+                                'k':k,
                                 'Delta': d,
                                 'Parameter_string': parm_str})
             
@@ -181,8 +177,8 @@ for d in delta:
             newrow = pd.Series({'ARL':results['ARL'],
                                 'SDRL':results['SDRL'],
                                 'MRL':results['MRL'],
-                                'L':L_arr[i],
-                                'Phi':parms_in_use,
+                                'L':L,
+                                'Phi':phi,
                                 'Delta': d,
                                 'Parameter_string': parm_str})
     
