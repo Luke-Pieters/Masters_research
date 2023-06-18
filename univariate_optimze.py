@@ -15,7 +15,7 @@ logging.basicConfig(filename=f"logs/Log-{current_time}",
                     level=logging.DEBUG)
 
 #CHART TO TEST
-chart = spm_schemes.MEWMA()
+chart = spm_schemes.MHWMA()
 chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name)

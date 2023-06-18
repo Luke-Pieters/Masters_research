@@ -1,0 +1,9 @@
+14:25:02,684 root INFO Running Optimize for MHWMA(0.1,-0.05)
+15:02:37,245 root INFO Optimal L for MHWMA(0.1,-0.05):  [2.32890625]
+15:02:37,245 root INFO Running Optimize for MHWMA(0.25,-0.125)
+15:18:41,683 root INFO Optimal L for MHWMA(0.25,-0.125):  [2.68125]
+15:18:41,683 root INFO Running Optimize for MHWMA(0.5,-0.25)
+15:38:04,777 root INFO Optimal L for MHWMA(0.5,-0.25):  [2.77578125]
+15:38:04,778 root INFO Running Optimize for MHWMA(0.9,-0.45)
+15:45:44,125 root INFO Optimal L for MHWMA(0.9,-0.45):  [2.81875]
+15:45:44,125 root INFO Optimization Complete for MHWMA
