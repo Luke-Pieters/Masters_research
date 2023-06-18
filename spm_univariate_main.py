@@ -51,7 +51,7 @@ use_k = False
 opt_k = lambda x: -x/2
 
 with open(f'results\{chart_name}_optimal_L.json') as json_file:
-       L = json.load(json_file)
+       L_arr = json.load(json_file)
 
 
 if 'phi2_arr' in globals():
@@ -65,7 +65,7 @@ if 'phi2_arr' in globals():
     sim_parameters = []
     for phi in phi_arr:
         for phi2 in phi2_arr[phi]:
-            sim_parameters += [phi,phi2]
+            sim_parameters += [[phi,phi2]]
 
     #ouput df
     output_df = pd.DataFrame(columns=['ARL','SDRL','MRL','L','Phi','Phi2','Delta','Parameter_string'])
@@ -80,7 +80,7 @@ elif use_k:
     #parameters
     sim_parameters = []
     for phi in phi_arr:
-        sim_parameters += [phi,opt_k(phi)]
+        sim_parameters += [[phi,opt_k(phi)]]
 
     #ouput df
     output_df = pd.DataFrame(columns=['ARL','SDRL','MRL','L','Phi','k','Delta','Parameter_string'])    
