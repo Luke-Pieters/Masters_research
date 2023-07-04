@@ -1,0 +1,3 @@
+15:21:09,327 root INFO Running Optimize for Multivariate p=2 EHWMA(0.1,0.01)
+16:03:12,102 root INFO Optimal L for EHWMA(0.1,0.01):  [3.]
+16:03:12,102 root INFO Running Optimize for Multivariate p=2 EHWMA(0.1,0.05)

@@ -126,14 +126,14 @@ def spm_optimize_L(chart_obj,n,p,initial_L,target_ARL=200,tol=1,max_its=10,bound
     return min_func_results.x
 
 
-p=4
+# p=4
 
-a=[1,2]
+# a=[1,2]
 
 
-test_chart = spm.EHWMA(L=2.794,phi=0.1,phi2=0.01,p=p)
-dist = sts.norm(loc=0,scale=1)
+# test_chart = spm.EHWMA(L=2.794,phi=0.1,phi2=0.01,p=p)
+# dist = sts.norm(loc=0,scale=1)
 
-first_t = spm_simulate(chart_obj=test_chart,distribution=dist,tau=1,max_it=2,p=4)
-print(first_t)
-print(test_chart.chart_history)
+# first_t = spm_simulate(chart_obj=test_chart,distribution=dist,tau=1,max_it=2,p=4)
+# print(first_t)
+# print(test_chart.chart_history)
