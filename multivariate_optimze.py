@@ -16,7 +16,7 @@ logging.basicConfig(filename=f"logs/Log-{current_time}",
 
 #CHART TO TEST
 p=4
-chart = spm_schemes.EHWMA(p=p)
+chart = spm_schemes.HWMA(p=p)
 chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name)
@@ -24,7 +24,7 @@ print("Chart: " + chart_name)
 initial_L = 13
 
 #CHART PARAMETERS 
-phi_arr = [0.1,0.25]
+phi_arr = [0.25]
 
 phi2_arr = {0.1: [0.01,0.05,0.09],
             0.25: [0.05,0.1,0.2],
@@ -38,14 +38,14 @@ phi_parm = []
 L_value = []
 
 for phi in phi_arr:
-    for phi2 in phi2_arr[phi]:
+    #for phi2 in phi2_arr[phi]:
         k = opt_k(phi)
-        logging.info(f"Running Optimize for Multivariate p={p} {chart_name}({phi},{phi2})")
-        chart.change_parameters(phi=phi,phi2=phi2)
+        logging.info(f"Running Optimize for Multivariate p={p} {chart_name}({phi})")
+        chart.change_parameters(phi=phi)
         res = sim.spm_optimize_L(chart_obj=chart,initial_L=initial_L,n=10000,tol=10,p=p)
             
-        logging.info(f'Optimal L for {chart_name}({phi},{phi2}):  {res}')
-        print(f'Optimal L for {chart_name}({phi},{phi2}):  {res}')
+        logging.info(f'Optimal L for {chart_name}({phi}):  {res}')
+        print(f'Optimal L for {chart_name}({phi}):  {res}')
 
 logging.info(f'Optimization Complete for Multivariate p={p} {chart_name}')
 print('Optimization Complete')
