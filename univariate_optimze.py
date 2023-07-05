@@ -20,7 +20,7 @@ chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name)
 
-initial_L = 2.75
+initial_L = 2.5
 
 #CHART PARAMETERS 
 phi_arr = [0.1,0.25,0.5,0.9]

@@ -29,6 +29,9 @@ def spm_simulate(chart_obj,distribution,p=2,tau=1,mu_0=0,sig_0=1,max_it=1000,sta
     t=0
     dist_mean = distribution.mean()
     dist_std = distribution.std()
+
+    chart_obj.reset_chart()
+
     while (ooc==False) & (t<max_it):
         t += 1
         if t < tau:
@@ -86,10 +89,10 @@ def spm_iterate(n,chart_obj,distribution,p=2,tau=1,L=None,standardise=False)-> l
     run_time =np.round(time()-start_time+0.4,decimals=0)
     print("Time: {} ".format(timedelta(seconds=run_time)))
     
-    return [ARL,SDRL,MRL]
+    return {'ARL':ARL,'SDRL':SDRL,'MRL':MRL}
 
 
-def spm_optimize_L(chart_obj,n,p,initial_L,target_ARL=200,tol=1,max_its=10,bounds=(0,3))-> float:
+def spm_optimize_L(chart_obj,n,p,initial_L,target_ARL=200,tol=1,max_its=10,bounds=(0,17))-> float:
     '''
     run iteratations for set chart with set parameters and use mimimize to find best L to achieve |ARL-target_ARL|<tol
     
@@ -109,7 +112,7 @@ def spm_optimize_L(chart_obj,n,p,initial_L,target_ARL=200,tol=1,max_its=10,bound
     
     start_time_op = time()
     #function to minimise
-    f = lambda L : np.abs(target_ARL - spm_iterate(L=L,n=n,chart_obj=chart_obj,distribution=sts.norm(loc=0,scale=1),p=p)[0])
+    f = lambda L : np.abs(target_ARL - spm_iterate(L=L,n=n,chart_obj=chart_obj,distribution=sts.norm(loc=0,scale=1),p=p)['ARL'])
 
     min_func_results = minimize(fun=f,
                                 x0=[initial_L],

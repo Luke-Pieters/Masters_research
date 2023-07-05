@@ -24,10 +24,10 @@ n=20000
 tau = 1 
 
 #CHART TO TEST
-chart = spm_schemes.EHWMA()
+p = 2
+chart = spm_schemes.EHWMA(p=p)
 chart_name = chart.__class__.__name__
 use_k = False
-p = 2
 
 print("MULTIVARIATE CHART SIMULATIONS")
 print("Chart: " + chart_name)

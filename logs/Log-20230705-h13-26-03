@@ -1,0 +1,13 @@
+13:26:03,449 root INFO Running Optimize for Multivariate p=3 EHWMA(0.1,0.01)
+13:42:21,349 root INFO Optimal L for EHWMA(0.1,0.01):  [9.2]
+13:42:21,350 root INFO Running Optimize for Multivariate p=3 EHWMA(0.1,0.05)
+13:57:16,305 root INFO Optimal L for EHWMA(0.1,0.05):  [9.6]
+13:57:16,305 root INFO Running Optimize for Multivariate p=3 EHWMA(0.1,0.09)
+14:23:00,320 root INFO Optimal L for EHWMA(0.1,0.09):  [10.]
+14:23:00,321 root INFO Running Optimize for Multivariate p=3 EHWMA(0.25,0.05)
+14:24:12,970 root INFO Optimal L for EHWMA(0.25,0.05):  [8.4]
+14:24:12,970 root INFO Running Optimize for Multivariate p=3 EHWMA(0.25,0.1)
+14:25:23,949 root INFO Optimal L for EHWMA(0.25,0.1):  [8.4]
+14:25:23,950 root INFO Running Optimize for Multivariate p=3 EHWMA(0.25,0.2)
+14:26:28,806 root INFO Optimal L for EHWMA(0.25,0.2):  [8.4]
+14:26:28,806 root INFO Optimization Complete for Multivariate p=3 EHWMA
