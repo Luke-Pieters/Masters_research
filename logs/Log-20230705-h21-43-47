@@ -1,0 +1,13 @@
+21:43:47,24 root INFO Running Optimize for Multivariate p=2 MEWMA(0.1,-0.05)
+21:54:04,542 root INFO Optimal L for MEWMA(0.1,-0.05):  [8.1]
+21:54:04,542 root INFO Running Optimize for Multivariate p=2 MEWMA(0.1,-0.05)
+22:04:22,717 root INFO Optimal L for MEWMA(0.1,-0.05):  [8.1]
+22:04:22,717 root INFO Running Optimize for Multivariate p=2 MEWMA(0.1,-0.05)
+22:14:40,906 root INFO Optimal L for MEWMA(0.1,-0.05):  [8.1]
+22:14:40,906 root INFO Running Optimize for Multivariate p=2 MEWMA(0.25,-0.125)
+22:23:56,963 root INFO Optimal L for MEWMA(0.25,-0.125):  [9.45]
+22:23:56,963 root INFO Running Optimize for Multivariate p=2 MEWMA(0.25,-0.125)
+22:33:09,414 root INFO Optimal L for MEWMA(0.25,-0.125):  [9.45]
+22:33:09,414 root INFO Running Optimize for Multivariate p=2 MEWMA(0.25,-0.125)
+22:42:16,301 root INFO Optimal L for MEWMA(0.25,-0.125):  [9.45]
+22:42:16,301 root INFO Optimization Complete for Multivariate p=2 MEWMA
