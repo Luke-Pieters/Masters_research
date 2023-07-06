@@ -1,0 +1,13 @@
+20:10:03,726 root INFO Running Optimize for Multivariate p=4 EEWMA(0.1,0.01)
+20:19:03,259 root INFO Optimal L for EEWMA(0.1,0.01):  [13.2]
+20:19:03,260 root INFO Running Optimize for Multivariate p=4 EEWMA(0.1,0.05)
+20:27:52,245 root INFO Optimal L for EEWMA(0.1,0.05):  [13.2]
+20:27:52,246 root INFO Running Optimize for Multivariate p=4 EEWMA(0.1,0.09)
+20:37:18,445 root INFO Optimal L for EEWMA(0.1,0.09):  [12.65]
+20:37:18,445 root INFO Running Optimize for Multivariate p=4 EEWMA(0.25,0.05)
+20:54:52,332 root INFO Optimal L for EEWMA(0.25,0.05):  [14.3]
+20:54:52,333 root INFO Running Optimize for Multivariate p=4 EEWMA(0.25,0.1)
+21:11:59,159 root INFO Optimal L for EEWMA(0.25,0.1):  [14.3]
+21:11:59,159 root INFO Running Optimize for Multivariate p=4 EEWMA(0.25,0.2)
+21:23:27,768 root INFO Optimal L for EEWMA(0.25,0.2):  [14.85]
+21:23:27,768 root INFO Optimization Complete for Multivariate p=4 EEWMA

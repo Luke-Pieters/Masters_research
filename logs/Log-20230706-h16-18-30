@@ -1,0 +1,5 @@
+16:18:30,422 root INFO Running Optimize for Multivariate p=3 MHWMA(0.1,-0.05)
+17:18:13,369 root INFO Optimal L for MHWMA(0.1,-0.05):  [7.15]
+17:18:13,370 root INFO Running Optimize for Multivariate p=3 MHWMA(0.25,-0.125)
+17:30:21,444 root INFO Optimal L for MHWMA(0.25,-0.125):  [11.]
+17:30:21,444 root INFO Optimization Complete for Multivariate p=3 MHWMA
