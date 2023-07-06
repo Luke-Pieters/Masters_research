@@ -47,5 +47,6 @@ for phi in phi_arr:
         logging.info(f'Optimal L for {chart_name}({phi},{k}):  {res}')
         print(f'Optimal L for {chart_name}({phi},{k}):  {res}')
 
+
 logging.info(f'Optimization Complete for Multivariate p={p} {chart_name}')
 print('Optimization Complete')
