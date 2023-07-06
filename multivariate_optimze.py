@@ -16,7 +16,7 @@ logging.basicConfig(filename=f"logs/Log-{current_time}",
 
 #CHART TO TEST
 p=4
-chart = spm_schemes.HWMA(p=p)
+chart = spm_schemes.EWMA(p=p)
 chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name)
@@ -24,7 +24,7 @@ print("Chart: " + chart_name)
 initial_L = 13
 
 #CHART PARAMETERS 
-phi_arr = [0.25]
+phi_arr = [0.1,0.25]
 
 phi2_arr = {0.1: [0.01,0.05,0.09],
             0.25: [0.05,0.1,0.2],

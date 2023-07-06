@@ -1,0 +1,5 @@
+19:03:17,480 root INFO Running Optimize for Multivariate p=4 EWMA(0.1)
+19:21:00,871 root INFO Optimal L for EWMA(0.1):  [13.]
+19:21:00,871 root INFO Running Optimize for Multivariate p=4 EWMA(0.25)
+19:43:59,815 root INFO Optimal L for EWMA(0.25):  [14.1375]
+19:43:59,815 root INFO Optimization Complete for Multivariate p=4 EWMA
