@@ -1,0 +1,5 @@
+17:35:17,942 root INFO Running Optimize for Multivariate p=2 HWMA(0.1)
+18:14:23,165 root INFO Optimal L for HWMA(0.1):  [7.65]
+18:14:23,165 root INFO Running Optimize for Multivariate p=2 HWMA(0.25)
+18:38:00,959 root INFO Optimal L for HWMA(0.25):  [9.9]
+18:38:00,960 root INFO Optimization Complete for Multivariate p=2 HWMA

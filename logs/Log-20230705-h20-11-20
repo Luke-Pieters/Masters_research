@@ -1,0 +1,5 @@
+20:11:20,379 root INFO Running Optimize for Multivariate p=4 HWMA(0.1)
+20:43:25,93 root INFO Optimal L for HWMA(0.1):  [10.35]
+20:43:25,93 root INFO Running Optimize for Multivariate p=4 HWMA(0.25)
+20:45:05,103 root INFO Optimal L for HWMA(0.25):  [9.45]
+20:45:05,103 root INFO Optimization Complete for Multivariate p=4 HWMA
