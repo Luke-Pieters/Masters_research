@@ -149,7 +149,7 @@ for d in delta:
             parm_str = f'phi={phi},k={k}'
         else:
             phi = parms_in_use
-            L = L_arr[f"p={p}"][phi]
+            L = L_arr[f"p={p}"][str(phi)]
             chart.change_parameters(phi=phi)  
             print(f"Parameters: Phi: {phi}, L: {L}") 
             parm_str = f'phi={phi}'
