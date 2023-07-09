@@ -17,15 +17,15 @@ logging.basicConfig(filename=f"logs/Log-{current_time}",
 
 #CHART TO TEST
 p=4
-chart = spm_schemes.EHWMA(p=p)
+chart = spm_schemes.EEWMA(p=p)
 chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name)
 
-initial_L = 12
+initial_L = 12.8
 
 #CHART PARAMETERS 
-phi_arr = [0.1,0.25]
+phi_arr = [0.1]
 
 phi2_arr = {0.1: [0.01,0.05,0.09],
             0.25: [0.05,0.1,0.2],
@@ -47,6 +47,7 @@ for phi in phi_arr:
             chart.change_parameters(phi=phi,phi2=phi2)
             res = sim.spm_optimize_L(chart_obj=chart,initial_L=initial_L,n=10000,tol=10,p=p)
             L_value += [res[0]]
+            print(L_value)
             
         opt_L = np.mean(L_value)
         logging.info(f'Optimal L for {chart_name}({phi},{phi2}):  {res}')

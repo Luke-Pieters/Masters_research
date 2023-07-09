@@ -24,7 +24,7 @@ n=20000
 tau = 1 
 
 #CHART TO TEST
-p = 4
+p = 2
 chart = spm_schemes.MEWMA(p=p)
 chart_name = chart.__class__.__name__
 use_k = True
