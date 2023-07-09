@@ -25,9 +25,9 @@ tau = 1
 
 #CHART TO TEST
 p = 4
-chart = spm_schemes.EHWMA(p=p)
+chart = spm_schemes.MEWMA(p=p)
 chart_name = chart.__class__.__name__
-use_k = False
+use_k = True
 
 print("MULTIVARIATE CHART SIMULATIONS")
 print("Chart: " + chart_name)
@@ -42,10 +42,10 @@ print(delta)
 #CHART PARAMETERS 
 phi_arr = [0.1,0.25]
 
-phi2_arr = {0.1: [0.01,0.05,0.09],
-            0.25: [0.05,0.1,0.2],
-            0.5: [0.1,0.2,0.4],
-            0.9: [0.2,0.5,0.8]} 
+# phi2_arr = {0.1: [0.01,0.05,0.09],
+#             0.25: [0.05,0.1,0.2],
+#             0.5: [0.1,0.2,0.4],
+#             0.9: [0.2,0.5,0.8]} 
 
 # k_arr = [1,2,3,4,
 #         1,2,3,4,
