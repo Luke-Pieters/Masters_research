@@ -37,7 +37,7 @@ for phi in phi_arr:
     k = opt_k(phi)
     logging.info(f"Running Optimize for {chart_name}({phi},{k})")
     chart.change_parameters(phi=phi,k=k)
-    res = sim.spm_optimize_L(chart_obj=chart,initial_L=initial_L,n=10000,tol=1)
+    res = sim.spm_optimize_L(chart_obj=chart,initial_L=initial_L,n=10000,tol=10)
         
     logging.info(f'Optimal L for {chart_name}({phi},{k}):  {res}')
     print(f'Optimal L for {chart_name}({phi},{k}):  {res}')

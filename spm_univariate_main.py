@@ -24,13 +24,13 @@ n=20000
 tau = 1 
 
 #CHART TO TEST
-chart = spm_schemes.MHWMA()
+chart = spm_schemes.EEWMA()
 chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name)
 
 #SHIFT SIZES 
-delta = np.arange(0.25,3.25,0.25)
+delta = np.arange(0,3.25,0.25)
 
 print("Shift Sizes:")
 print(delta)
@@ -38,16 +38,16 @@ print(delta)
 #CHART PARAMETERS 
 phi_arr = [0.1,0.25,0.5,0.9]
 
-# phi2_arr = {0.1: [0.01,0.05,0.09],
-#             0.25: [0.05,0.1,0.2],
-#             0.5: [0.1,0.2,0.4],
-#             0.9: [0.2,0.5,0.8]} 
+phi2_arr = {0.1: [0.01,0.05,0.09],
+            0.25: [0.05,0.1,0.2],
+            0.5: [0.1,0.2,0.4],
+            0.9: [0.2,0.5,0.8]} 
 
 # k_arr = [1,2,3,4,
 #         1,2,3,4,
 #         1,2,3,4]
 
-use_k = True
+use_k = False
 opt_k = lambda x: -x/2
 
 with open(f'results\{chart_name}_optimal_L.json') as json_file:
@@ -144,7 +144,7 @@ for d in delta:
             parm_str = f'phi={phi},k={k}'
         else:
             phi = parms_in_use
-            L = L_arr[phi]
+            L = L_arr[str(phi)]
             chart.change_parameters(phi=phi)  
             print(f"Parameters: Phi: {phi}, L: {L}") 
             parm_str = f'phi={phi}'
