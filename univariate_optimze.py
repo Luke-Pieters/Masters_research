@@ -2,6 +2,7 @@ import spm_sim_module as sim
 import Schemes_module as spm_schemes
 import logging
 import json
+from numpy import round
 
 from datetime import datetime
 now = datetime.now()
@@ -47,7 +48,7 @@ for phi in phi_arr:
         
     logging.info(f'Optimal L for {chart_name}({phi},{k}):  {res}')
     print(f'Optimal L for {chart_name}({phi},{k}):  {res}')
-    L_arr[str(phi)] = res[0]
+    L_arr[str(phi)] = round(res[0],5)
 
 with open(f'results\{chart_name}_optimal_L.json', 'w') as json_file:
     json.dump(L_arr, json_file)
