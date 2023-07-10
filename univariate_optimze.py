@@ -1,6 +1,7 @@
 import spm_sim_module as sim
 import Schemes_module as spm_schemes
 import logging
+import json
 
 from datetime import datetime
 now = datetime.now()
@@ -15,7 +16,7 @@ logging.basicConfig(filename=f"logs/Log-{current_time}",
                     level=logging.DEBUG)
 
 #CHART TO TEST
-chart = spm_schemes.MHWMA()
+chart = spm_schemes.HWMA()
 chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name)
@@ -33,14 +34,23 @@ phi_parm = []
 # k_parm = []
 L_value = []
 
+with open(f'results\{chart_name}_optimal_L.json') as json_file:
+    L_arr = json.load(json_file)
+
 for phi in phi_arr:
     k = opt_k(phi)
     logging.info(f"Running Optimize for {chart_name}({phi},{k})")
     chart.change_parameters(phi=phi,k=k)
-    res = sim.spm_optimize_L(chart_obj=chart,initial_L=initial_L,n=10000,tol=10)
+    initial_L = L_arr[str(phi)]
+    # initial_L = L_arr[str(phi)][str(phi2)]
+    res = sim.spm_optimize_L(chart_obj=chart,initial_L=initial_L,n=50000,tol=1)
         
     logging.info(f'Optimal L for {chart_name}({phi},{k}):  {res}')
     print(f'Optimal L for {chart_name}({phi},{k}):  {res}')
+    L_arr[str(phi)] = res[0]
+
+with open(f'results\{chart_name}_optimal_L.json', 'w') as json_file:
+    json.dump(L_arr, json_file)
 
 logging.info(f'Optimization Complete for {chart_name}')
 print('Optimization Complete')

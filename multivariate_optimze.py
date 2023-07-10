@@ -50,8 +50,8 @@ for phi in phi_arr:
             print(L_value)
             
         opt_L = np.mean(L_value)
-        logging.info(f'Optimal L for {chart_name}({phi},{phi2}):  {res}')
-        print(f'Optimal L for {chart_name}({phi},{phi2}):  {res}')
+        logging.info(f'Optimal L for Multivariate p={p} {chart_name}({phi},{phi2}):  {res}')
+        print(f'Optimal L for Multivariate p={p} {chart_name}({phi},{phi2}):  {res}')
 
 
 logging.info(f'Optimization Complete for Multivariate p={p} {chart_name}')

@@ -20,11 +20,11 @@ log = logging.getLogger(__name__)
 #==========================================================================
 
 #ITERATE PARAMETERS
-n=20000
+n=50000
 tau = 1 
 
 #CHART TO TEST
-chart = spm_schemes.EEWMA()
+chart = spm_schemes.EHWMA()
 chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name)
