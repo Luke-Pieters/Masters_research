@@ -1,6 +1,6 @@
-\begin{tabular}{rrrrr}
+\begin{tabular}{m{0.03\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}}
 \hline
-   $\delta$ &   $\phi$=0.1 &   $\phi$=0.25 &   $\phi$=0.5 &   $\phi$=0.9 \\
+   $\delta$ &   $\phi=0.1$ &   $\phi=0.25$ &   $\phi=0.5$ &   $\phi=0.9$ \\
 \hline
         0.0 &        200.7 &         196.3 &        197.3 &        196.1 \\
         0.2 &         59.9 &          83.9 &        114.0 &        146.5 \\
