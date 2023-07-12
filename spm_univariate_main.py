@@ -29,7 +29,7 @@ tau_arr = [1]
 print(tau_arr)
 
 #CHART TO TEST
-chart = spm_schemes.EHWMA()
+chart = spm_schemes.EEWMA()
 chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name)
@@ -41,16 +41,14 @@ print("Shift Sizes:")
 print(delta)
 
 #CHART PARAMETERS 
-phi_arr = [0.1,0.25,0.5,0.9]
+phi_arr = [0.1,0.25]
+# phi_arr = [0.1,0.25,0.5,0.9]
 
 phi2_arr = {0.1: [0.01,0.05,0.09],
             0.25: [0.05,0.1,0.2],
             0.5: [0.1,0.2,0.4],
             0.9: [0.2,0.5,0.8]} 
 
-# k_arr = [1,2,3,4,
-#         1,2,3,4,
-#         1,2,3,4]
 
 use_k = False
 opt_k = lambda x: -x/2
