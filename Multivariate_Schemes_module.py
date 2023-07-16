@@ -92,7 +92,8 @@ class SPM_Multi_chart:
 class HWMA(SPM_Multi_chart):
     def chart_stat(self,series) -> np.array:
         #series should be list of vectors/arrays
-        St = self.phi*series[-1] + (1-self.phi)*np.mean(series[:-1])
+        x_bar = np.mean(series[:-1],0)
+        St = self.phi*series[-1] + (1-self.phi)*x_bar
         self.chart_history = self.chart_history + [St]
         return St
     
@@ -106,7 +107,8 @@ class HWMA(SPM_Multi_chart):
 #Extended HWMA SCHEME    
 class EHWMA(SPM_Multi_chart):
     def chart_stat(self,series) -> np.array:
-        St = self.phi*series[-1] - self.phi2*series[-2] + (1-self.phi+self.phi2)*np.mean(series[:-1])
+        x_bar = np.mean(series[:-1],0)
+        St = self.phi*series[-1] - self.phi2*series[-2] + (1-self.phi+self.phi2)*x_bar
         self.chart_history = self.chart_history + [St]
         return St
 
@@ -125,7 +127,8 @@ class EHWMA(SPM_Multi_chart):
 #Modified HWMA SCHEME
 class MHWMA(SPM_Multi_chart):
     def chart_stat(self,series) -> float:
-        St = self.phi*series[-1] + (1-self.phi)*np.mean(series[:-1]) + self.k*(series[-1]-series[-2])
+        x_bar = np.mean(series[:-1],0)
+        St = self.phi*series[-1] + (1-self.phi)*x_bar + self.k*(series[-1]-series[-2])
         self.chart_history = np.append(self.chart_history,St)
         return St
 
