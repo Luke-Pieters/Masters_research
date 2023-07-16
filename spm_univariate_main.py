@@ -20,23 +20,26 @@ log = logging.getLogger(__name__)
 #==========================================================================
 
 #ITERATE PARAMETERS
-n=50000
+n=10000
 tau = 1 
-tau_arr = [1]
-# tau_arr = [1]*10
-# tau_arr = [tau_arr[i]**(i) for i in range(10)]
+# tau_arr = [1]
+tau_arr = [10]*6
+tau_arr = [tau_arr[i]**(i) for i in range(6)]
 
+dist_arr = [sts.norm(loc=0,scale=1),sts.t(df=10),sts.gamma(loc=1,sacle=1),sts.gamma(loc=10,scale=1),sts.lognorm(scale=np.exp(0),s=1),sts.chi2(df=30)]
+dist_names = ["N(0,1)","t(10)","GAM(1,1)","GAM(10,1)","LogN(0,1)","X2(30)"]
+dist_num = len(dist_arr)
 print(tau_arr)
 
 #CHART TO TEST
-chart = spm_schemes.EEWMA()
+chart = spm_schemes.MHWMA()
 chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name)
 
 #SHIFT SIZES 
-delta = np.arange(0,3.25,0.25)
-# delta = [0.25]
+# delta = np.arange(0,3.25,0.25)
+delta = [0.25,3.0]
 print("Shift Sizes:")
 print(delta)
 
@@ -44,13 +47,13 @@ print(delta)
 phi_arr = [0.1,0.25]
 # phi_arr = [0.1,0.25,0.5,0.9]
 
-phi2_arr = {0.1: [0.01,0.05,0.09],
-            0.25: [0.05,0.1,0.2],
-            0.5: [0.1,0.2,0.4],
-            0.9: [0.2,0.5,0.8]} 
+# phi2_arr = {0.1: [0.01,0.05,0.09],
+#             0.25: [0.05,0.1,0.2],
+#             0.5: [0.1,0.2,0.4],
+#             0.9: [0.2,0.5,0.8]} 
 
 
-use_k = False
+use_k = True
 opt_k = lambda x: -x/2
 
 with open(f'results\{chart_name}_optimal_L.json') as json_file:
@@ -71,8 +74,8 @@ if 'phi2_arr' in globals():
             sim_parameters += [[phi,phi2]]
 
     #ouput df
-    output_df = pd.DataFrame(columns=['ARL','SDRL','MRL','L','Phi','Phi2','Delta','Parameter_string'])
-    # output_df = pd.DataFrame(columns=['Tau','ARL','SDRL','MRL','L','Phi','Phi2','Delta','Parameter_string'])
+    # output_df = pd.DataFrame(columns=['ARL','SDRL','MRL','L','Phi','Phi2','Delta','Parameter_string'])
+    output_df = pd.DataFrame(columns=['Tau','ARL','SDRL','MRL','L','Phi','Phi2','Delta','Parameter_string'])
 
 elif use_k:
     #check parameters match chart
@@ -87,8 +90,8 @@ elif use_k:
         sim_parameters += [[phi,opt_k(phi)]]
 
     #ouput df
-    output_df = pd.DataFrame(columns=['ARL','SDRL','MRL','L','Phi','k','Delta','Parameter_string'])    
-    # output_df = pd.DataFrame(columns=['Tau','ARL','SDRL','MRL','L','Phi','k','Delta','Parameter_string'])    
+    # output_df = pd.DataFrame(columns=['ARL','SDRL','MRL','L','Phi','k','Delta','Parameter_string'])    
+    output_df = pd.DataFrame(columns=['Tau','ARL','SDRL','MRL','L','Phi','k','Delta','Parameter_string'])    
 else:
     #check parameters match chart
     accepted_charts = ["EWMA","HWMA"]
@@ -100,8 +103,8 @@ else:
     sim_parameters = phi_arr
 
     #ouput df
-    output_df = pd.DataFrame(columns=['ARL','SDRL','MRL','L','Phi','Delta','Parameter_string'])
-    # output_df = pd.DataFrame(columns=['Tau','ARL','SDRL','MRL','L','Phi','Delta','Parameter_string'])
+    # output_df = pd.DataFrame(columns=['ARL','SDRL','MRL','L','Phi','Delta','Parameter_string'])
+    output_df = pd.DataFrame(columns=['Tau','ARL','SDRL','MRL','L','Phi','Delta','Parameter_string'])
 
 
 print("Simulation Parameters:")
@@ -115,10 +118,10 @@ total_parameters = len(sim_parameters)
 #         exit()
 
 #setup and set folders to save results
-filepath = "./results/univariate_results/"
-# filepath = "./results/univariate_results/ced/"
-filename = filepath + "/" + chart_name + "_ARL_SDRL_MRL_results.csv"
-# filename = filepath + "/" + chart_name + "CED_results.csv"
+# filepath = "./results/univariate_results/"
+filepath = "./results/univariate_results/ced/"
+# filename = filepath + "/" + chart_name + "_ARL_SDRL_MRL_results.csv"
+filename = filepath + "/" + chart_name + "_CED_results.csv"
 makedirs(filepath, exist_ok=True) 
 
 #==========================================================================
@@ -163,7 +166,8 @@ for d in delta:
             print(results)
 
             if 'phi2_arr' in globals():
-                newrow = pd.Series({'ARL':results['ARL'],
+                newrow = pd.Series({'Tau': tau,
+                                    'ARL':results['ARL'],
                                     'SDRL':results['SDRL'],
                                     'MRL':results['MRL'],
                                     'L':L,
@@ -173,7 +177,8 @@ for d in delta:
                                     'Parameter_string': parm_str})
                 
             elif use_k in globals():
-                newrow = pd.Series({'ARL':results['ARL'],
+                newrow = pd.Series({'Tau': tau,
+                                    'ARL':results['ARL'],
                                     'SDRL':results['SDRL'],
                                     'MRL':results['MRL'],
                                     'L':L,
@@ -183,7 +188,8 @@ for d in delta:
                                     'Parameter_string': parm_str})
                 
             else:
-                newrow = pd.Series({'ARL':results['ARL'],
+                newrow = pd.Series({'Tau': tau,
+                                    'ARL':results['ARL'],
                                     'SDRL':results['SDRL'],
                                     'MRL':results['MRL'],
                                     'L':L,
