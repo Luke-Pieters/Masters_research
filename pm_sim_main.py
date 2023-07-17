@@ -7,9 +7,10 @@ from sklearn.metrics import mean_squared_error
 import pandas as pd
 import scipy.stats as sts
 from ProgressBar_module import printProgressBar
+from os import makedirs
 
 #CHART TO TEST
-n = 2
+n = 100
 
 x_p = 2
 x_names = [f"X{i+1}" for i in range(x_p)]
@@ -17,6 +18,10 @@ x_values = np.arange(-4,4.5,0.5)
 
 true_parms = [3.0,2.0,5.0]
 true_var = 1.0
+
+change_parms = np.zeros(len(true_parms))
+delta_arr = [0,0.25, 1.0, 3.0]
+# delta_arr = np.arange(0,3.25,0.25)
 
 print(x_values,np.mean(x_values))
 
@@ -44,41 +49,116 @@ L = L_arr[str(f"p={x_p+2}")][str(phi)]
 chart.change_L(L)
 
 # sts.norm(loc=mu_0,scale=sig_0).rvs(1)
-# printProgressBar(iteration=0,total=n,prefix='Simulation Progress')
-t_arr = []
-for i in range(n):
-    # printProgressBar(iteration=i,total=n,prefix='Simulation Progress')
-    t = 0
-    ooc = False
-    while ooc == False and t < 2:
-        t += 1
-        Y = true_parms[0]
-        for d in range(x_p):
-            Y += true_parms[d+1]*X_df[x_names[d]] 
-        Y += sts.norm(loc=0,scale=true_var).rvs(len(x_values))
+# 
+
+filepath = "./results/pm/"
+# filename = filepath + "/" + chart_name + "_ARL_SDRL_MRL_results.csv"
+filename = filepath + "/" + chart_name + "_pm_results.csv"
+ml_filename = filepath + "/" + chart_name + "_ml_data.csv"
+makedirs(filepath, exist_ok=True)
+
+parm_names = {0:"B0",
+              1:"B1",
+              2:"B2",
+              3:"S2"}
+
+output_df = pd.DataFrame(columns=['Parm','Delta','ARL','SDRL','MRL','Phi'])
+ml_df = pd.DataFrame(columns=['Parm','Delta','B0','B1','B2','S2','T2'])
+ic_count = 0
+for p in range(len(true_parms)+1):
+    print("_"*30)
+    print(f"Parameter: {parm_names[p]}")
+    print("_"*30)
+    for d in delta_arr:
+        if (d==0)&(ic_count >0):
+            continue #only do d=0 once
+
+        print("="*30)
+        print(f"Delta: {d}")
+        print("="*30)
+
+        if d==0:
+            ic_count += 1
+
+        if p < len(true_parms):
+            shift_vec = change_parms
+            shift_vec[p] = d*np.sqrt(true_var) 
+            sim_parm = true_parms + shift_vec
+            sim_var = true_var
+        else:
+            sim_var = (1 + d)*2
+            sim_parm = true_parms
+        t_arr = []
+        printProgressBar(iteration=0,total=n,prefix='Simulation Progress')
+        for i in range(n):
+            printProgressBar(iteration=i,total=n,prefix='Simulation Progress')
+            t = 0
+            ooc = False
+            while ooc == False and t < 220:
+                t += 1
+                Y = sim_parm[0]
+                for j in range(x_p):
+                    Y += sim_parm[j+1]*X_df[x_names[j]] 
+                Y += sts.norm(loc=0,scale=sim_var).rvs(len(x_values))
+                
+                # print(Y)
+                mdl = linear_model.LinearRegression()
+                mdl.fit(X_df,Y)
+                y_hat = mdl.predict(X_df)
+                mse = mean_squared_error(Y,y_hat)
+
+                est_parms = [mdl.intercept_]
+                for j in range(x_p):
+                    est_parms += [mdl.coef_[j]]
+                est_parms += [mse]
+                sample_list += [np.array(est_parms)]
+                St = chart.chart_stat(sample_list)
+                T2 = chart.T2_stat(St,t)
+                ooc = chart.check_ooc(St,t=t)
+
+                # print(f"t={t}",f"sample={est_parms}",f"St={St}",f"T2={T2}",f"L={chart.L}",f"ooc={ooc}")
+
+            t_arr += [t]
+
+            ml_newrow = pd.Series({'Parm': p,
+                            'Delta': d,
+                            'B0': sample_list[-1][0],
+                            'B1': sample_list[-1][1],
+                            'B2':sample_list[-1][2],
+                            'S2':sample_list[-1][3],
+                            'T2':T2})
+            
+            ml_df = pd.concat([ml_df,ml_newrow.to_frame().T],ignore_index=True)
+            ml_df.to_csv(ml_filename,index=False,mode='w') #update csv file
+
+            chart.reset_chart()
+
+        ARL = np.mean(t_arr)
+        SDRL = np.std(t_arr)
+        MRL = np.median(t_arr)
+
+        newrow = pd.Series({'Parm': p,
+                            'Delta': d,
+                            'ARL': ARL,
+                            'SDRL': SDRL,
+                            'MRL': MRL,
+                            'Phi':phi})
         
-        # print(Y)
-        mdl = linear_model.LinearRegression()
-        mdl.fit(X_df,Y)
-        y_hat = mdl.predict(X_df)
-        mse = mean_squared_error(Y,y_hat)
+        output_df = pd.concat([output_df,newrow.to_frame().T],ignore_index=True)
+        output_df.to_csv(filename,index=False,mode='w') #update csv file 
 
-        est_parms = [mdl.intercept_]
-        for d in range(x_p):
-            est_parms += [mdl.coef_[d]]
-        est_parms += [mse]
-        sample_list += [np.array(est_parms)]
-        St = chart.chart_stat(sample_list)
-        T2 = chart.T2_stat(St,t)
-        ooc = chart.check_ooc(St,t=t)
+        printProgressBar(iteration=n,total=n,prefix='Simulation Progress')
 
-        print(f"t={t}",f"sample={est_parms}",f"St={St}",f"T2={T2}",f"L={chart.L}",f"ooc={ooc}")
 
-    t_arr += [t]
+#OUTPUT
+print(output_df)
 
-    chart.reset_chart()
+print(ml_df.info())
+# filename = filepath + "/" + chart_name + "_ARL_SDRL_MRL_results.csv"
+# output_df.to_csv(filename,index=False)  
 
-# printProgressBar(iteration=n,total=n,prefix='Simulation Progress')
+print("Output DataFrame saved to: " + filename)
 
-print(t_arr)
-print(np.mean(t_arr))
+print("========================")
+print("SIMULATIONS COMPLETED")
+print("========================")

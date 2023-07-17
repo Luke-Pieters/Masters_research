@@ -19,7 +19,7 @@ logging.basicConfig(filename=f"logs/Log-{current_time}",
 
 #CHART TO TEST
 p=4
-chart = spm_schemes.EWMA(p=p)
+chart = spm_schemes.MHWMA(p=p)
 chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name + f"p={p}")
@@ -45,6 +45,7 @@ for phi in phi_arr:
         k = opt_k(phi)
         logging.info(f"Running Optimize for {chart_name}({phi})")
         chart.change_parameters(phi=phi,k=k)
+        # chart.change_parameters(phi=phi,k=k)
         initial_L = L_arr[f"p={p}"][str(phi)]
         # initial_L = L_arr[f"p={p}"][str(phi)][str(phi2)]
         res = sim.spm_optimize_L(chart_obj=chart,initial_L=initial_L,n=50000,tol=1,p=p)
