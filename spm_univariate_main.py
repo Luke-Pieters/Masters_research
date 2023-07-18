@@ -23,11 +23,16 @@ log = logging.getLogger(__name__)
 n=10000
 tau = 1 
 # tau_arr = [1]
-tau_arr = [10]*6
-tau_arr = [tau_arr[i]**(i) for i in range(6)]
+tau_arr1 = [10]*5
+tau_arr1 = [tau_arr1[i]**(i) for i in range(6)]
+tau_arr2 = [x*2 for x in tau_arr1]
+tau_arr = []*(len(tau_arr1)*2)
+tau_arr[::2] = tau_arr1
+tau_arr[1::2] = tau_arr2
 
-dist_arr = [sts.norm(loc=0,scale=1),sts.t(df=10),sts.gamma(loc=1,sacle=1),sts.gamma(loc=10,scale=1),sts.lognorm(scale=np.exp(0),s=1),sts.chi2(df=30)]
-dist_names = ["N(0,1)","t(10)","GAM(1,1)","GAM(10,1)","LogN(0,1)","X2(30)"]
+
+# dist_arr = [sts.norm(loc=0,scale=1),sts.t(df=10),sts.gamma(loc=1,sacle=1),sts.gamma(loc=10,scale=1),sts.lognorm(scale=np.exp(0),s=1),sts.chi2(df=30)]
+# dist_names = ["N(0,1)","t(10)","GAM(1,1)","GAM(10,1)","LogN(0,1)","X2(30)"]
 dist_num = len(dist_arr)
 print(tau_arr)
 
