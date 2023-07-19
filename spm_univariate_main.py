@@ -23,17 +23,18 @@ log = logging.getLogger(__name__)
 n=10000
 tau = 1 
 # tau_arr = [1]
-tau_arr1 = [10]*5
-tau_arr1 = [tau_arr1[i]**(i) for i in range(6)]
-tau_arr2 = [x*2 for x in tau_arr1]
-tau_arr = []*(len(tau_arr1)*2)
-tau_arr[::2] = tau_arr1
-tau_arr[1::2] = tau_arr2
+# tau_arr1 = [10]*5
+# tau_arr1 = [tau_arr1[i]**(i) for i in range(5)]
+# tau_arr2 = [x*2 for x in tau_arr1]
+# tau_arr = [None]*(len(tau_arr1) + len(tau_arr2))
+# tau_arr[::2] = tau_arr1
+# tau_arr[1::2] = tau_arr2
 
+tau_arr = np.arange(1,110,10)
 
 # dist_arr = [sts.norm(loc=0,scale=1),sts.t(df=10),sts.gamma(loc=1,sacle=1),sts.gamma(loc=10,scale=1),sts.lognorm(scale=np.exp(0),s=1),sts.chi2(df=30)]
 # dist_names = ["N(0,1)","t(10)","GAM(1,1)","GAM(10,1)","LogN(0,1)","X2(30)"]
-dist_num = len(dist_arr)
+# dist_num = len(dist_arr)
 print(tau_arr)
 
 #CHART TO TEST
@@ -139,7 +140,7 @@ for d in delta:
         #DISTRIBUTION TO SAMPLE FROM 
         dist = sts.norm(loc=d,scale=1)
         print('========================')
-        print("Delta: {:.2f}".format(d))
+        print(f"Delta: {d}, Tau: {tau}")
         print('========================')
         for i in range(total_parameters):
             parms_in_use = sim_parameters[i]
