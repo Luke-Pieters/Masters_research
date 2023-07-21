@@ -38,7 +38,7 @@ tau_arr = np.arange(1,110,10)
 print(tau_arr)
 
 #CHART TO TEST
-chart = spm_schemes.MHWMA()
+chart = spm_schemes.MEWMA()
 chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name)
