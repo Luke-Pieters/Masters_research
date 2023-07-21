@@ -1,21 +1,20 @@
 setwd("~/Masters/Research/Main_Code")
 
+
 library(ggplot2)
 library(readr)
 library(tidyr)
 library(dplyr)
 library(RColorBrewer)
 
-#MULTIVARIATE DIM:p
-p=2
-HWMA_results_df <- read_csv(paste("results/multivariate_results/p",p,"_HWMA_ARL_SDRL_MRL_results.csv",sep = ''))
-EWMA_results_df <- read_csv(paste("results/multivariate_results/p",p,"_EWMA_ARL_SDRL_MRL_results.csv",sep = ''))
-EHWMA_results_df <- read_csv(paste("results/multivariate_results/p",p,"_EHWMA_ARL_SDRL_MRL_results.csv",sep = ''))
-EEWMA_results_df <- read_csv(paste("results/multivariate_results/p",p,"_EEWMA_ARL_SDRL_MRL_results.csv",sep = ''))
-MHWMA_results_df <- read_csv(paste("results/multivariate_results/p",p,"_MHWMA_ARL_SDRL_MRL_results.csv",sep = ''))
-MEWMA_results_df <- read_csv(paste("results/multivariate_results/p",p,"_MEWMA_ARL_SDRL_MRL_results.csv",sep = ''))
+HWMA_results_df <- read_csv("results/univariate_results/ced/HWMA_CED_results.csv")
+EWMA_results_df <- read_csv("results/univariate_results/ced/EWMA_CED_results.csv")
+EHWMA_results_df <- read_csv("results/univariate_results/ced/EHWMA_CED_results.csv")
+EEWMA_results_df <- read_csv("results/univariate_results/ced/EEWMA_CED_results.csv")
+MHWMA_results_df <- read_csv("results/univariate_results/ced/MHWMA_CED_results.csv")
+MEWMA_results_df <- read_csv("results/univariate_results/ced/MEWMA_CED_results.csv")
 
-cols_of_interest = c("ARL","Delta","Phi","Parameter_string","Scheme")
+cols_of_interest = c("Tau","ARL","Delta","Phi","Parameter_string","Scheme")
 
 #add scheme
 HWMA_results_df$Scheme <- "HWMA"
@@ -43,34 +42,20 @@ main_ex_df <- rbind(Alt_HWMA,
                     EHWMA_results_df,
                     EEWMA_results_df)
 
-#main_df <- rbind(HWMA_results_df[cols_of_interest],
-#                 EHWMA_results_df[cols_of_interest],
-#                 MHWMA_results_df[cols_of_interest])
-
-#main_mod_df <- main_mod_df[main_mod_df$Phi < 0.5,]
-main_mod_df <- main_mod_df[(main_mod_df$Delta >= 0.25)&(main_mod_df$Delta < 2),]
-main_mod_df$Parameter_string <- as.factor(main_mod_df$Parameter_string)
+#MODIFIED
 main_mod_df$Delta <- as.factor(main_mod_df$Delta)
 main_mod_df$Scheme <- factor(main_mod_df$Scheme,levels= c("EWMA","HWMA","MEWMA","MHWMA"))
-
 main_mod_df$Phi <- paste("phi :",main_mod_df$Phi,sep = '')
 main_mod_df$Delta <- paste("delta :",main_mod_df$Delta,sep = '')
+main_mod_df$ARL <- round(main_mod_df$ARL,1)
 
-main_ex_df <- main_ex_df[main_ex_df$Phi < 0.5,]
-main_ex_df <- main_ex_df[(main_ex_df$Delta >= 0.25)&(main_ex_df$Delta < 1.75),]
-main_ex_df$Parameter_string <- as.factor(main_ex_df$Parameter_string)
+#EXTENDED
 main_ex_df$Delta <- as.factor(main_ex_df$Delta)
 main_ex_df$Scheme <- factor(main_ex_df$Scheme,levels= c("EWMA","HWMA","EEWMA","EHWMA"))
-
 main_ex_df$Phi <- paste("phi[1] :",main_ex_df$Phi)
 main_ex_df$Phi2 <- paste("phi[2] :",main_ex_df$Phi2)
 main_ex_df$Delta <- paste("delta :",main_ex_df$Delta,sep = '')
-
-#main_df <- main_df[main_df$Phi < 0.5,]
-#main_df <- main_df[(main_df$Delta > 0)&(main_df$Delta < 2),]
-#main_df$Parameter_string <- as.factor(main_df$Parameter_string)
-
-#theme_linedraw()
+main_ex_df$ARL <- round(main_ex_df$ARL,1)
 
 theme_main <- function(){ 
   font <- "CenturySch"   #assign font family up front
@@ -142,39 +127,18 @@ theme_main <- function(){
 }
 
 mod_plot <- main_mod_df %>%
-  ggplot(aes(x=Delta,y=ARL,fill=Scheme))+
-  geom_col(linewidth=1.3,position="dodge")+
+  ggplot(aes(x=Tau,y=ARL,col=Scheme))+
+  geom_path(size=1.3,linetype="dotdash")+
   scale_fill_brewer(palette="RdBu")+
   facet_wrap(~Scheme) +
   facet_grid(rows = vars(Phi),cols = vars(Delta),scales = "free",labeller = label_parsed)+
-  labs(title = paste("OOC ARL Performance (p=",p,")",sep=''))+
-  xlab(expression(paste("Shift size: ", delta)))+
+  labs(title = "CED ARL Performance")+
+  xlab(expression(paste("ced: ", tau)))+
   theme_main()
 
 print(mod_plot)
 ggsave(plot=mod_plot,
-       filename= paste("modified_schmes_compare_plot_multivariate_p",p,".png",sep = ''),
-       path = "results/Plots",
-       dpi=320,
-       width=8.70,
-       height=5.95,
-)
-
-ex_plot <- main_ex_df %>%
-  ggplot(aes(x=Delta,y=ARL,fill=Scheme))+
-  geom_col(linewidth=1.3,position="dodge")+
-  scale_fill_brewer(palette="RdBu")+
-  #xlim(0.5,1.75)+
-  #scale_x_continuous(limits = c(0.5,1.75), expand = c(0, 0))+
-  facet_wrap(~Scheme) +
-  facet_grid(Phi + Phi2 ~ Delta,scales = "free",labeller = label_parsed)+
-  labs(title = paste("OOC ARL Performance (p=",p,")",sep=''))+
-  xlab(expression(paste("Shift size: ", delta)))+
-  theme_main()
-
-print(ex_plot)
-ggsave(plot=ex_plot,
-       filename= paste("extended_schmes_compare_plot_multivariate_p",p,".png",sep = ''),
+       filename= "modified_CED_compare_plot_univariate.png",
        path = "results/Plots",
        dpi=320,
        width=8.70,
