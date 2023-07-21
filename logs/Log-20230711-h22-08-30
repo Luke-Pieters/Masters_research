@@ -1,0 +1,5 @@
+22:08:30,55 root INFO Running Optimize for EWMA(0.1)
+01:01:10,833 root INFO Optimal L for EWMA(0.1):  [12.9390625]
+01:01:10,834 root INFO Running Optimize for EWMA(0.25)
+03:44:35,270 root INFO Optimal L for EWMA(0.25):  [14.20376953]
+03:44:35,271 root INFO Optimization Complete for EWMA p4
