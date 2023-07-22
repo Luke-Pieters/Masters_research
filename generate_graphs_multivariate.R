@@ -7,7 +7,7 @@ library(dplyr)
 library(RColorBrewer)
 
 #MULTIVARIATE DIM:p
-p=2
+p=4
 HWMA_results_df <- read_csv(paste("results/multivariate_results/p",p,"_HWMA_ARL_SDRL_MRL_results.csv",sep = ''))
 EWMA_results_df <- read_csv(paste("results/multivariate_results/p",p,"_EWMA_ARL_SDRL_MRL_results.csv",sep = ''))
 EHWMA_results_df <- read_csv(paste("results/multivariate_results/p",p,"_EHWMA_ARL_SDRL_MRL_results.csv",sep = ''))
@@ -143,7 +143,7 @@ theme_main <- function(){
 
 mod_plot <- main_mod_df %>%
   ggplot(aes(x=Delta,y=ARL,fill=Scheme))+
-  geom_col(linewidth=1.3,position="dodge")+
+  geom_col(size=1.3,position="dodge")+
   scale_fill_brewer(palette="RdBu")+
   facet_wrap(~Scheme) +
   facet_grid(rows = vars(Phi),cols = vars(Delta),scales = "free",labeller = label_parsed)+
@@ -162,7 +162,7 @@ ggsave(plot=mod_plot,
 
 ex_plot <- main_ex_df %>%
   ggplot(aes(x=Delta,y=ARL,fill=Scheme))+
-  geom_col(linewidth=1.3,position="dodge")+
+  geom_col(size=1.3,position="dodge")+
   scale_fill_brewer(palette="RdBu")+
   #xlim(0.5,1.75)+
   #scale_x_continuous(limits = c(0.5,1.75), expand = c(0, 0))+
