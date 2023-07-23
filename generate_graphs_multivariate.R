@@ -26,11 +26,16 @@ EWMA_results_df$Scheme <- "EWMA"
 EEWMA_results_df$Scheme <- "EEWMA"
 MEWMA_results_df$Scheme <- "MEWMA"
 
+dontwants <- c("phi=0.1,phi2=0.09","phi=0.25,phi2=0.2")
+
+EEWMA_results_df <- EEWMA_results_df[!(EEWMA_results_df$Parameter_string %in% dontwants),]
+EHWMA_results_df <- EHWMA_results_df[!(EHWMA_results_df$Parameter_string %in% dontwants),]
+
 #Alt HWMA, EWMA
-Alt_HWMA <- data.frame(lapply(HWMA_results_df, rep, 3)) %>% arrange(Delta,Phi)
+Alt_HWMA <- data.frame(lapply(HWMA_results_df, rep, 2)) %>% arrange(Delta,Phi)
 Alt_HWMA$Phi2 <- EHWMA_results_df$Phi2
 
-Alt_EWMA <- data.frame(lapply(EWMA_results_df, rep, 3)) %>% arrange(Delta,Phi)
+Alt_EWMA <- data.frame(lapply(EWMA_results_df, rep, 2)) %>% arrange(Delta,Phi)
 Alt_EWMA$Phi2 <- EEWMA_results_df$Phi2
 
 main_mod_df <- rbind(HWMA_results_df[cols_of_interest],
@@ -42,6 +47,8 @@ main_ex_df <- rbind(Alt_HWMA,
                     Alt_EWMA,
                     EHWMA_results_df,
                     EEWMA_results_df)
+
+
 
 #main_df <- rbind(HWMA_results_df[cols_of_interest],
 #                 EHWMA_results_df[cols_of_interest],

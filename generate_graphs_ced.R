@@ -25,22 +25,33 @@ EWMA_results_df$Scheme <- "EWMA"
 EEWMA_results_df$Scheme <- "EEWMA"
 MEWMA_results_df$Scheme <- "MEWMA"
 
-#Alt HWMA, EWMA
-Alt_HWMA <- data.frame(lapply(HWMA_results_df, rep, 3)) %>% arrange(Delta,Phi)
-Alt_HWMA$Phi2 <- EHWMA_results_df$Phi2
+dontwants <- c("phi=0.1,phi2=0.09","phi=0.1,phi2=0.01","phi=0.25,phi2=0.1","phi=0.25,phi2=0.05")
 
-Alt_EWMA <- data.frame(lapply(EWMA_results_df, rep, 3)) %>% arrange(Delta,Phi)
-Alt_EWMA$Phi2 <- EEWMA_results_df$Phi2
+EEWMA_results_df <- EEWMA_results_df[!(EEWMA_results_df$Parameter_string %in% dontwants),]
+EHWMA_results_df <- EHWMA_results_df[!(EHWMA_results_df$Parameter_string %in% dontwants),]
+
+#Alt HWMA, EWMA
+HWMA_results_df$Parameter_string[HWMA_results_df$Phi == 0.1] <- "phi[1] :0.1 | phi[2] :0.05"
+HWMA_results_df$Parameter_string[HWMA_results_df$Phi == 0.25] <- "phi[1] :0.25 | phi[2] :0.2"
+EHWMA_results_df$Parameter_string[EHWMA_results_df$Phi == 0.1] <- "phi[1] :0.1 | phi[2] :0.05"
+EHWMA_results_df$Parameter_string[EHWMA_results_df$Phi == 0.25] <- "phi[1] :0.25 | phi[2] :0.2"
+
+EWMA_results_df$Parameter_string[EWMA_results_df$Phi == 0.1] <- "phi[1] :0.1 | phi[2] :0.05"
+EWMA_results_df$Parameter_string[EWMA_results_df$Phi == 0.25] <- "phi[1] :0.25 | phi[2] :0.2"
+EEWMA_results_df$Parameter_string[EEWMA_results_df$Phi == 0.1] <- "phi[1] :0.1 | phi[2] :0.05"
+EEWMA_results_df$Parameter_string[EEWMA_results_df$Phi == 0.25] <- "phi[1] :0.25 | phi[2] :0.2"
 
 main_mod_df <- rbind(HWMA_results_df[cols_of_interest],
                      EWMA_results_df[cols_of_interest],
                      MHWMA_results_df[cols_of_interest],
                      MEWMA_results_df[cols_of_interest])
 
-main_ex_df <- rbind(Alt_HWMA,
-                    Alt_EWMA,
-                    EHWMA_results_df,
-                    EEWMA_results_df)
+cols_of_interest = c("Tau","ARL","Delta","Parameter_string","Scheme")
+
+main_ex_df <- rbind(HWMA_results_df[cols_of_interest],
+                    EWMA_results_df[cols_of_interest],
+                    EHWMA_results_df[cols_of_interest],
+                    EEWMA_results_df[cols_of_interest])
 
 #MODIFIED
 main_mod_df$Delta <- as.factor(main_mod_df$Delta)
@@ -52,10 +63,11 @@ main_mod_df$ARL <- round(main_mod_df$ARL,1)
 #EXTENDED
 main_ex_df$Delta <- as.factor(main_ex_df$Delta)
 main_ex_df$Scheme <- factor(main_ex_df$Scheme,levels= c("EWMA","HWMA","EEWMA","EHWMA"))
-main_ex_df$Phi <- paste("phi[1] :",main_ex_df$Phi)
-main_ex_df$Phi2 <- paste("phi[2] :",main_ex_df$Phi2)
 main_ex_df$Delta <- paste("delta :",main_ex_df$Delta,sep = '')
 main_ex_df$ARL <- round(main_ex_df$ARL,1)
+
+main_ex_df_1 <- main_ex_df[main_ex_df$Parameter_string == "phi[1] :0.1 | phi[2] :0.05",]
+main_ex_df_2 <- main_ex_df[main_ex_df$Parameter_string == "phi[1] :0.25 | phi[2] :0.2",]
 
 theme_main <- function(){ 
   font <- "CenturySch"   #assign font family up front
@@ -98,9 +110,6 @@ theme_main <- function(){
         family = font,            #axis famuly
         size = 12),                #font size
       
-      axis.text.x = element_blank(),
-      axis.ticks.x=element_blank(),
-      
       strip.text.x = element_text(
         size = 12,
         color = "white"
@@ -127,11 +136,11 @@ theme_main <- function(){
 }
 
 mod_plot <- main_mod_df %>%
-  ggplot(aes(x=Tau,y=ARL,col=Scheme))+
-  geom_path(size=1.3,linetype="dotdash")+
-  scale_fill_brewer(palette="RdBu")+
-  facet_wrap(~Scheme) +
-  facet_grid(rows = vars(Phi),cols = vars(Delta),scales = "free",labeller = label_parsed)+
+  ggplot(aes(x=Tau,y=ARL,col=Scheme,linetype=Scheme))+
+  geom_path(size=1.3)+
+  scale_color_brewer(palette="RdBu")+
+  facet_wrap(Phi~Delta,scales = "free",labeller = label_parsed) +
+  #facet_grid(rows = vars(Phi),cols = vars(Delta),scales = "free",labeller = label_parsed)+
   labs(title = "CED ARL Performance")+
   xlab(expression(paste("ced: ", tau)))+
   theme_main()
@@ -139,6 +148,43 @@ mod_plot <- main_mod_df %>%
 print(mod_plot)
 ggsave(plot=mod_plot,
        filename= "modified_CED_compare_plot_univariate.png",
+       path = "results/Plots",
+       dpi=320,
+       width=8.70,
+       height=5.95,
+)
+
+ex_plot1 <- main_ex_df_1 %>%
+  ggplot(aes(x=Tau,y=ARL,col=Scheme,linetype=Scheme))+
+  geom_path(size=1.3)+
+  scale_color_brewer(palette="RdBu")+
+  facet_wrap( Parameter_string~Delta,scales = "free",labeller = label_parsed) +
+  #facet_grid(rows = vars(Phi),cols = vars(Delta),scales = "free",labeller = label_parsed)+
+  labs(title = "CED ARL Performance")+
+  xlab(expression(paste("ced: ", tau)))+
+  theme_main()
+
+ex_plot2 <- main_ex_df_2 %>%
+  ggplot(aes(x=Tau,y=ARL,col=Scheme,linetype=Scheme))+
+  geom_path(size=1.3)+
+  scale_color_brewer(palette="RdBu")+
+  facet_wrap( Parameter_string~Delta,scales = "free",labeller = label_parsed) +
+  #facet_grid(rows = vars(Phi),cols = vars(Delta),scales = "free",labeller = label_parsed)+
+  labs(title = "CED ARL Performance")+
+  xlab(expression(paste("ced: ", tau)))+
+  theme_main()
+
+print(ex_plot1)
+print(ex_plot2)
+ggsave(plot=ex_plot1,
+       filename= "extended_CED_compare_plot_univariate_1.png",
+       path = "results/Plots",
+       dpi=320,
+       width=8.70,
+       height=5.95,
+)
+ggsave(plot=ex_plot2,
+       filename= "extended_CED_compare_plot_univariate_2.png",
        path = "results/Plots",
        dpi=320,
        width=8.70,

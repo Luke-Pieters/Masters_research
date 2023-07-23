@@ -7,8 +7,8 @@ library(tidyr)
 library(dplyr)
 library(RColorBrewer)
 
-MHWMA_results_df <- read_csv("results/univariate_results/dist/MHWMA_dist_results.csv")
-EHWMA_results_df <- read_csv("results/univariate_results/dist/EHWMA_dist_results.csv")
+MHWMA_results_df <- read_csv("results/univariate_results/dist/MHWMA_dist_results_std.csv")
+EHWMA_results_df <- read_csv("results/univariate_results/dist/EHWMA_dist_results_std.csv")
 
 cols_of_interest = c("ARL","Phi","Distribution","MIN","Q25","MRL","Q75","MAX")
 main_mod_df = MHWMA_results_df[cols_of_interest]
