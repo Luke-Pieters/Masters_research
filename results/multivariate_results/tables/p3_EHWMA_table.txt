@@ -1,8 +1,7 @@
-\begin{tabular}{|m{0.03\textwidth}|>{\centering\arraybackslash}m{0.09\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}|}
+\begin{tabular}{||>{\centering\arraybackslash}m{0.03\textwidth}||>{\centering\arraybackslash}m{0.09\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}||}
 \hline
    $\delta$ &   $\phi_1=0.1$ $\phi_2=0.01$ &   $\phi_1=0.1$ $\phi_2=0.05$ &   $\phi_1=0.1$ $\phi_2=0.09$ &   $\phi_1=0.25$ $\phi_2=0.05$ &   $\phi_1=0.25$ $\phi_2=0.1$ &   $\phi_1=0.25$ $\phi_2=0.2$ \\
 \hline
-        0.0 &                        198.8 &                        202.4 &                        199.7 &                         203.3 &                        194.2 &                        201.7 \\
         0.2 &                         72.3 &                         75.9 &                         80.3 &                          95.2 &                         96.7 &                        111.2 \\
         0.5 &                         29.9 &                         31.5 &                         33.4 &                          37.6 &                         39.1 &                         46.1 \\
         0.8 &                         17.0 &                         17.8 &                         18.7 &                          19.8 &                         20.5 &                         23.9 \\

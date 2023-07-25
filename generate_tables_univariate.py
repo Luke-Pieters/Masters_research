@@ -7,7 +7,8 @@ import re
 schemes = ["EWMA","HWMA","MEWMA","MHWMA","EEWMA","EHWMA"]
 results_dict = {}
 for s in schemes:
-    results_dict[s] = pd.read_csv(f"results/univariate_results/{s}_ARL_SDRL_MRL_results.csv")
+    df = pd.read_csv(f"results/univariate_results/{s}_ARL_SDRL_MRL_results.csv")
+    results_dict[s] = df[df['Delta'] != 0]
 
 filepath = "./results/univariate_results/tables"
 makedirs(filepath, exist_ok=True)
@@ -36,11 +37,12 @@ for s in schemes:
     parms = ['$\delta$'] + parms
     print(parms)
 
-    spacing = "{|" + "m{0.03\\\\textwidth}|" + ">{\\\\centering\\\\arraybackslash}m{0.09\\\\textwidth}"*(len(parms)-1) + ">{\\\\centering\\\\arraybackslash}m{0.09\\\\textwidth}" + "|}"
+    spacing = "{ || " + ">{\\\\centering\\\\arraybackslash}m{0.03\\\\textwidth} || " + ">{\\\\centering\\\\arraybackslash}m{0.09\\\\textwidth} "*(len(parms)-1) + " || }"
     print(spacing)
 
     tbl = str(tabulate(df,parms,tablefmt="latex_raw",floatfmt=".1f",showindex="always"))
     tbl = re.sub(r"\{r+\}",spacing,tbl)
+    # tbl = re.sub("tabular","tabularx",tbl)
     filename = filepath + "/" + s + "_table.txt"
     with open(filename, "w") as f:
       print(tbl, file=f)

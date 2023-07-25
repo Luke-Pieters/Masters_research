@@ -6,9 +6,10 @@ import re
 #UNIVARIATE CASES
 schemes = ["EWMA","HWMA","MEWMA","MHWMA","EEWMA","EHWMA"]
 results_dict = {}
-p=4
+p=3
 for s in schemes:
-    results_dict[s] = pd.read_csv(f"results/multivariate_results/p{p}_{s}_ARL_SDRL_MRL_results.csv")
+    df = pd.read_csv(f"results/multivariate_results/p{p}_{s}_ARL_SDRL_MRL_results.csv")
+    results_dict[s] = df[df['Delta'] != 0]
 
 filepath = "./results/multivariate_results/tables"
 makedirs(filepath, exist_ok=True)
@@ -37,7 +38,7 @@ for s in schemes:
     parms = ['$\delta$'] + parms
     print(parms)
 
-    spacing = "{|" + "m{0.03\\\\textwidth}|" + ">{\\\\centering\\\\arraybackslash}m{0.09\\\\textwidth}"*(len(parms)-1) + ">{\\\\centering\\\\arraybackslash}m{0.09\\\\textwidth}" + "|}"
+    spacing = "{||" + ">{\\\\centering\\\\arraybackslash}m{0.03\\\\textwidth}||" + ">{\\\\centering\\\\arraybackslash}m{0.09\\\\textwidth}"*(len(parms)-1) + "||}"
     print(spacing)
 
     tbl = str(tabulate(df,parms,tablefmt="latex_raw",floatfmt=".1f",showindex="always"))
@@ -45,3 +46,4 @@ for s in schemes:
     filename = filepath + "/" + "p" + str(p) + "_" + s + "_table.txt"
     with open(filename, "w") as f:
       print(tbl, file=f)
+

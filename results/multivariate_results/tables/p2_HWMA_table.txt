@@ -1,8 +1,7 @@
-\begin{tabular}{|m{0.03\textwidth}|>{\centering\arraybackslash}m{0.09\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}|}
+\begin{tabular}{||>{\centering\arraybackslash}m{0.03\textwidth}||>{\centering\arraybackslash}m{0.09\textwidth}>{\centering\arraybackslash}m{0.09\textwidth}||}
 \hline
    $\delta$ &   $\phi=0.1$ &   $\phi=0.25$ \\
 \hline
-        0.0 &        200.2 &         198.9 \\
         0.2 &         66.2 &          82.8 \\
         0.5 &         27.2 &          32.2 \\
         0.8 &         15.4 &          17.1 \\

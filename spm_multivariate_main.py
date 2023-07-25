@@ -20,12 +20,12 @@ log = logging.getLogger(__name__)
 #==========================================================================
 
 #ITERATE PARAMETERS
-n=50000
+n=30000
 tau = 1 
 
 #CHART TO TEST
 p = 4
-chart = spm_schemes.MHWMA(p=p)
+chart = spm_schemes.MEWMA(p=p)
 chart_name = chart.__class__.__name__
 use_k = True
 
