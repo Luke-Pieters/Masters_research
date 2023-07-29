@@ -25,23 +25,26 @@ for s in schemes:
     if 'k' in parms[0]:
         parms = [ x.split(',')[0]  for x in parms] #drop k
 
-    parms = [ "$" + x + "$" for x in parms]
     if 'phi2' in parms[0]:
-        parms = [ x.replace('phi=','\phi_1=') for x in parms]
-        parms = [ x.replace('phi2','\phi_2') for x in parms]
-        parms = [ x.replace(',','$ $') for x in parms]
+        parms = [ x.replace('phi=','$\\boldsymbol{\phi_1=') for x in parms]
+        parms = [ x.replace('phi2','$\\boldsymbol{\phi_2') for x in parms]
+        parms = [ x.replace(',','}$ ') for x in parms]
+        parms = [ x + "}$" for x in parms]
     else:
-        parms = [ x.replace('phi','\phi') for x in parms]
-        parms = [ x.replace(',','$ $') for x in parms]
+        parms = [ x.replace('phi=','$\\boldsymbol{\phi_1=') for x in parms]
+        parms = [ x + "}$" for x in parms]
 
-    parms = ['$\delta$'] + parms
+    parms = ['$\\boldsymbol{\delta}$'] + parms
+    parms = ["{\color[HTML]{FFFFFF}" + x + "}" for x in parms]
     print(parms)
 
-    spacing = "{ || " + ">{\\\\centering\\\\arraybackslash}m{0.03\\\\textwidth} || " + ">{\\\\centering\\\\arraybackslash}m{0.09\\\\textwidth} "*(len(parms)-1) + " || }"
+    spacing = "{ | " + ">{\\\\centering\\\\arraybackslash}m{0.03\\\\textwidth} | " + ">{\\\\centering\\\\arraybackslash}m{0.09\\\\textwidth} "*(len(parms)-1) + " | }"
     print(spacing)
 
     tbl = str(tabulate(df,parms,tablefmt="latex_raw",floatfmt=".1f",showindex="always"))
     tbl = re.sub(r"\{r+\}",spacing,tbl)
+    tbl = re.sub(r"\\hline",r"\\hline \\rowcolor[HTML]{4A6FCC} ",tbl,count=1)
+    # tbl = re.sub(r"\s+",' ',tbl)
     # tbl = re.sub("tabular","tabularx",tbl)
     filename = filepath + "/" + s + "_table.txt"
     with open(filename, "w") as f:
