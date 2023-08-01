@@ -142,7 +142,8 @@ mod_plot <- main_mod_df %>%
   facet_wrap(Phi~Delta,scales = "free",labeller = label_parsed) +
   #facet_grid(rows = vars(Phi),cols = vars(Delta),scales = "free",labeller = label_parsed)+
   labs(title = "CED ARL Performance")+
-  xlab(expression(paste("ced: ", tau)))+
+  xlab(expression(paste(tau)))+
+  ylab(expression(paste('D',tau)))+
   theme_main()
 
 print(mod_plot)
@@ -161,7 +162,8 @@ ex_plot1 <- main_ex_df_1 %>%
   facet_wrap( Parameter_string~Delta,scales = "free",labeller = label_parsed) +
   #facet_grid(rows = vars(Phi),cols = vars(Delta),scales = "free",labeller = label_parsed)+
   labs(title = "CED ARL Performance")+
-  xlab(expression(paste("ced: ", tau)))+
+  xlab(expression(paste(tau)))+
+  ylab(expression(paste('D',tau)))+
   theme_main()
 
 ex_plot2 <- main_ex_df_2 %>%
@@ -171,7 +173,8 @@ ex_plot2 <- main_ex_df_2 %>%
   facet_wrap( Parameter_string~Delta,scales = "free",labeller = label_parsed) +
   #facet_grid(rows = vars(Phi),cols = vars(Delta),scales = "free",labeller = label_parsed)+
   labs(title = "CED ARL Performance")+
-  xlab(expression(paste("ced: ", tau)))+
+  xlab(expression(paste(tau)))+
+  ylab(expression(paste('D',tau)))+
   theme_main()
 
 print(ex_plot1)

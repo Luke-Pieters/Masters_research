@@ -5,6 +5,7 @@ import re
 
 #UNIVARIATE CASES
 schemes = ["EWMA","HWMA","MEWMA","MHWMA","EEWMA","EHWMA"]
+values = 'MRL'
 results_dict = {}
 for s in schemes:
     df = pd.read_csv(f"results/univariate_results/{s}_ARL_SDRL_MRL_results.csv")
@@ -14,7 +15,7 @@ filepath = "./results/univariate_results/tables"
 makedirs(filepath, exist_ok=True)
 
 for s in schemes:
-    df = pd.pivot_table(results_dict[s],values='ARL', index='Delta',columns='Parameter_string')
+    df = pd.pivot_table(results_dict[s],values=values, index='Delta',columns='Parameter_string')
     print(s)
     print(df)
     print('='*30)
@@ -46,6 +47,6 @@ for s in schemes:
     tbl = re.sub(r"\\hline",r"\\hline \\rowcolor[HTML]{4A6FCC} ",tbl,count=1)
     # tbl = re.sub(r"\s+",' ',tbl)
     # tbl = re.sub("tabular","tabularx",tbl)
-    filename = filepath + "/" + s + "_table.txt"
+    filename = filepath + "/" + s + f"_{values}_table.txt"
     with open(filename, "w") as f:
       print(tbl, file=f)
