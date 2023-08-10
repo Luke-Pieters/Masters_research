@@ -39,7 +39,7 @@ for s in schemes:
     print(df_e)   
     
     parms = list(pd.unique(results_dict[s]['Parameter_string']))
-
+    num_parms = len(parms)
 
     if 'k' in parms[0]:
         parms = [ x.split(',')[0]  for x in parms] #drop k
@@ -59,8 +59,12 @@ for s in schemes:
 
     spacing = "{ | " + ">{\\\\centering\\\\arraybackslash}m{0.03\\\\textwidth} | " + ">{\\\\centering\\\\arraybackslash}m{0.09\\\\textwidth} "*(len(parms)-1) + " | }"
     print(spacing)
+    
+    float_fmt = ['.1f']*num_parms
+    float_fmt = ['.2f'] + float_fmt
+    float_fmt = tuple(float_fmt)
 
-    tbl = str(tabulate(df,parms,tablefmt="latex_raw",floatfmt=".1f",showindex="always"))
+    tbl = str(tabulate(df,parms,tablefmt="latex_raw",floatfmt=float_fmt,showindex="always"))
     tbl = re.sub(r"\{r+\}",spacing,tbl)
     tbl = re.sub(r"\\hline",r"\\hline \\rowcolor[HTML]{4A6FCC} ",tbl,count=1)
     
