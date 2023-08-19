@@ -20,7 +20,7 @@ true_parms = [3.0,2.0,5.0]
 true_var = 1.0
 
 change_parms = np.zeros(len(true_parms))
-delta_arr = [0,0.25, 1.0, 3.0]
+delta_arr = [0, 1.0, 2.0, 3.0]
 # delta_arr = np.arange(0,3.25,0.25)
 
 print(x_values,np.mean(x_values))
@@ -51,6 +51,13 @@ chart.change_L(L)
 # sts.norm(loc=mu_0,scale=sig_0).rvs(1)
 # 
 
+#=======================================================================================================================
+#=======================================================================================================================
+#=======================================================================================================================
+#=======================================================================================================================
+#=======================================================================================================================
+#=======================================================================================================================
+'''
 filepath = "./results/pm/"
 # filename = filepath + "/" + chart_name + "_ARL_SDRL_MRL_results.csv"
 filename = filepath + "/" + chart_name + "_pm_results.csv"
@@ -148,8 +155,8 @@ for p in range(len(true_parms)+1):
         output_df.to_csv(filename,index=False,mode='w') #update csv file 
 
         printProgressBar(iteration=n,total=n,prefix='Simulation Progress')
-
-
+        
+        
 #OUTPUT
 print(output_df)
 
@@ -158,6 +165,194 @@ print(ml_df.info())
 # output_df.to_csv(filename,index=False)  
 
 print("Output DataFrame saved to: " + filename)
+'''
+#===============================================================================================================================
+#===============================================================================================================================
+#===============================================================================================================================
+#===============================================================================================================================
+#===============================================================================================================================
+#===============================================================================================================================
+#SHORT EXAMPLE DATA GENERATION 
+n = 5 #number of IC samples 
+
+sample_list = true_parms + [true_var]
+sample_list = [np.array(sample_list)]
+chart.reset_chart()
+
+ml_exmpl_df = pd.DataFrame(columns=['t','Parm','Delta','B0','B1','B2','S2','T2','OOC'])
+
+filepath = "./results/pm/"
+# filename = filepath + "/" + chart_name + "_ARL_SDRL_MRL_results.csv"
+filename = filepath + "/" + chart_name + "_pm_results.csv"
+ml_exmpl_filename = filepath + "/" + chart_name + "_ml_exmpl_data.csv"
+makedirs(filepath, exist_ok=True)
+ooc = False
+
+d=0
+sim_parm = true_parms
+sim_var = true_var
+p=-1
+for t in range(n):
+                Y = sim_parm[0]
+                for j in range(x_p):
+                    Y += sim_parm[j+1]*X_df[x_names[j]] 
+                Y += sts.norm(loc=0,scale=sim_var).rvs(len(x_values))
+                
+                # print(Y)
+                mdl = linear_model.LinearRegression()
+                mdl.fit(X_df,Y)
+                y_hat = mdl.predict(X_df)
+                mse = mean_squared_error(Y,y_hat)
+
+                est_parms = [mdl.intercept_]
+                for j in range(x_p):
+                    est_parms += [mdl.coef_[j]]
+                est_parms += [mse]
+                sample_list += [np.array(est_parms)]
+                St = chart.chart_stat(sample_list)
+                T2 = chart.T2_stat(St,t)
+                ooc = chart.check_ooc(St,t=t)
+
+                # print(f"t={t}",f"sample={est_parms}",f"St={St}",f"T2={T2}",f"L={chart.L}",f"ooc={ooc}")
+
+                ml_newrow = pd.Series({'t': t+1,
+                                       'Parm': p,
+                                        'Delta': d,
+                                        'B0': sample_list[-1][0],
+                                        'B1': sample_list[-1][1],
+                                        'B2':sample_list[-1][2],
+                                        'S2':sample_list[-1][3],
+                                        'T2':T2,
+                                        'OOC':ooc})
+                
+                ml_exmpl_df = pd.concat([ml_exmpl_df,ml_newrow.to_frame().T],ignore_index=True)
+                ml_exmpl_df.to_csv(ml_exmpl_filename,index=False,mode='w') #update csv fil
+
+#ADD SMALL SHIFT TO PARM 1
+d=3
+p=1
+t+= 1
+shift_vec = change_parms
+shift_vec[p] = d*np.sqrt(true_var) 
+sim_parm = true_parms + shift_vec
+sim_var = true_var
+
+Y = sim_parm[0]
+for j in range(x_p):
+    Y += sim_parm[j+1]*X_df[x_names[j]] 
+Y += sts.norm(loc=0,scale=sim_var).rvs(len(x_values))
+
+# print(Y)
+mdl = linear_model.LinearRegression()
+mdl.fit(X_df,Y)
+y_hat = mdl.predict(X_df)
+mse = mean_squared_error(Y,y_hat)
+
+est_parms = [mdl.intercept_]
+for j in range(x_p):
+    est_parms += [mdl.coef_[j]]
+est_parms += [mse]
+sample_list += [np.array(est_parms)]
+St = chart.chart_stat(sample_list)
+T2 = chart.T2_stat(St,t)
+ooc = chart.check_ooc(St,t=t)
+
+ml_newrow = pd.Series({'t': t+1,
+                        'Parm': p,
+                        'Delta': d,
+                        'B0': sample_list[-1][0],
+                        'B1': sample_list[-1][1],
+                        'B2':sample_list[-1][2],
+                        'S2':sample_list[-1][3],
+                        'T2':T2,
+                        'OOC':ooc})
+
+ml_exmpl_df = pd.concat([ml_exmpl_df,ml_newrow.to_frame().T],ignore_index=True)
+ml_exmpl_df.to_csv(ml_exmpl_filename,index=False,mode='w') #update csv file
+
+#ADD medium SHIFT TO PARM 2
+d=2
+p=2
+t+= 1
+shift_vec = change_parms
+shift_vec[p] = d*np.sqrt(true_var) 
+sim_parm = true_parms + shift_vec
+sim_var = true_var
+
+Y = sim_parm[0]
+for j in range(x_p):
+    Y += sim_parm[j+1]*X_df[x_names[j]] 
+Y += sts.norm(loc=0,scale=sim_var).rvs(len(x_values))
+
+# print(Y)
+mdl = linear_model.LinearRegression()
+mdl.fit(X_df,Y)
+y_hat = mdl.predict(X_df)
+mse = mean_squared_error(Y,y_hat)
+
+est_parms = [mdl.intercept_]
+for j in range(x_p):
+    est_parms += [mdl.coef_[j]]
+est_parms += [mse]
+sample_list += [np.array(est_parms)]
+St = chart.chart_stat(sample_list)
+T2 = chart.T2_stat(St,t)
+ooc = chart.check_ooc(St,t=t)
+
+ml_newrow = pd.Series({'t': t+1,
+                        'Parm': p,
+                        'Delta': d,
+                        'B0': sample_list[-1][0],
+                        'B1': sample_list[-1][1],
+                        'B2':sample_list[-1][2],
+                        'S2':sample_list[-1][3],
+                        'T2':T2,
+                        'OOC':ooc})
+
+ml_exmpl_df = pd.concat([ml_exmpl_df,ml_newrow.to_frame().T],ignore_index=True)
+ml_exmpl_df.to_csv(ml_exmpl_filename,index=False,mode='w') #update csv file
+
+#ADD large SHIFT TO VAR
+d=1
+p=3
+t+= 1 
+sim_parm = true_parms 
+sim_var = (1 + d)*2
+
+Y = sim_parm[0]
+for j in range(x_p):
+    Y += sim_parm[j+1]*X_df[x_names[j]] 
+Y += sts.norm(loc=0,scale=sim_var).rvs(len(x_values))
+
+# print(Y)
+mdl = linear_model.LinearRegression()
+mdl.fit(X_df,Y)
+y_hat = mdl.predict(X_df)
+mse = mean_squared_error(Y,y_hat)
+
+est_parms = [mdl.intercept_]
+for j in range(x_p):
+    est_parms += [mdl.coef_[j]]
+est_parms += [mse]
+sample_list += [np.array(est_parms)]
+St = chart.chart_stat(sample_list)
+T2 = chart.T2_stat(St,t)
+ooc = chart.check_ooc(St,t=t)
+
+ml_newrow = pd.Series({'t': t+1,
+                        'Parm': p,
+                        'Delta': d,
+                        'B0': sample_list[-1][0],
+                        'B1': sample_list[-1][1],
+                        'B2':sample_list[-1][2],
+                        'S2':sample_list[-1][3],
+                        'T2':T2,
+                        'OOC':ooc})
+
+ml_exmpl_df = pd.concat([ml_exmpl_df,ml_newrow.to_frame().T],ignore_index=True)
+ml_exmpl_df.to_csv(ml_exmpl_filename,index=False,mode='w') #update csv file
+
+print(ml_exmpl_df)
 
 print("========================")
 print("SIMULATIONS COMPLETED")
