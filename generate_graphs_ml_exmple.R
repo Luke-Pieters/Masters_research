@@ -9,7 +9,6 @@ library(RColorBrewer)
 
 MHWMA_ml_exmpl_data <- read_csv("results/pm/MHWMA_ml_exmpl_data.csv")
 
-
 theme_main <- function(){ 
   font <- "CenturySch"   #assign font family up front
   
@@ -93,6 +92,7 @@ mod_plot <- MHWMA_ml_exmpl_data %>%
   #facet_grid(rows = vars(Phi),cols = vars(Delta),scales = "free",labeller = label_parsed)+
   labs(title = "T2")+
   xlab('t')+
+  xlim(1,8)+
   ylab('T2')+
   theme_main()
 
