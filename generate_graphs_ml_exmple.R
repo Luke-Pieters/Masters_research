@@ -85,12 +85,11 @@ mod_plot <- MHWMA_ml_exmpl_data %>%
   annotate("rect", xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = 14, fill = "#4393C3", alpha = .5, color = NA)+
   annotate("rect", xmin = -Inf, xmax = Inf, ymin = 14, ymax = Inf, fill = "#D6604D", alpha = .5, color = NA)+
   geom_hline(yintercept = 14,col='#B2182B',linetype='dashed',size=1.3)+
-  geom_text(aes(0,14,label = 'h=14', vjust = -1),col='#B2182B')+
+  geom_text(aes(1,14,label = 'h=14', vjust = -1),col='#B2182B')+
   geom_path(size=1.3)+
-  geom_point(size=1.3)+
+  geom_point(size=2)+
   scale_color_manual(values = colours)+
-  #facet_grid(rows = vars(Phi),cols = vars(Delta),scales = "free",labeller = label_parsed)+
-  labs(title = "T2")+
+  labs(title = "Charting statisitc for each sample")+
   xlab('t')+
   xlim(1,8)+
   ylab('T2')+
@@ -98,7 +97,7 @@ mod_plot <- MHWMA_ml_exmpl_data %>%
 
 print(mod_plot)
 ggsave(plot=mod_plot,
-       filename= "modified_CED_compare_plot_univariate.png",
+       filename= "modified_ml_example_chart.png",
        path = "results/Plots",
        dpi=320,
        width=8.70,
