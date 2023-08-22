@@ -31,6 +31,9 @@ for i in range(x_p):
 
 print(X_df)
 
+X = 
+X_X = np.linalg.inv(np.array(X_df).T@np.array(X_df))
+
 sample_list = true_parms + [true_var]
 sample_list = [np.array(sample_list)]
 
@@ -38,7 +41,7 @@ print(sample_list)
 
 opt_k = lambda x: -x/2
 phi = 0.25
-chart = spm_schemes.MHWMA(p=(x_p+2),phi=phi,k=opt_k(phi),mean_0=sample_list[0],sig2_0=np.identity(x_p+2))
+chart = spm_schemes.MHWMA(p=(x_p+2),phi=phi,k=opt_k(phi),mean_0=sample_list[0],sig2_0=true_var*X_X)
 chart_name = chart.__class__.__name__
 print("Chart: " + chart_name)
 
