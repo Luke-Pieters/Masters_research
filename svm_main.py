@@ -132,15 +132,25 @@ print(f"table saved in {filename}")
 opt_k = lambda x: -x/2
 phi = 0.25
 
-x_names = [f"X{i+1}" for i in range(2)]
+x_names = [f"X{i+1}" for i in range(3)]
 x_values = np.arange(-4,4.5,0.5)
 X_df = pd.DataFrame()
-for i in range(2):
-    X_df[x_names[i]] = x_values**(i+1)
+for i in range(3):
+    X_df[x_names[i]] = x_values**(i)
+
+print(X_df)
 
 X_X = np.linalg.inv(np.array(X_df).T@np.array(X_df))
 
-print(X_X)
+True_sig = np.zeros((4,4))
+
+for i in range(3):
+    for j in range(3):
+        True_sig[i,j] = X_X[i,j]
+        
+True_sig[3,3] = 1
+
+print(True_sig)
 
 true_parms = [3.0,2.0,5.0]
 true_var = 1.0
@@ -150,8 +160,8 @@ true_mean = np.array(true_mean)
 
 series = [true_mean]
 
-mod_chart = spm.MHWMA(p=4,phi=phi,k=opt_k(phi),mean_0=true_mean,sig2_0=X_X,L=14.1)
-ex_chart = spm.EHWMA(p=4,phi=phi,phi2=0.1,mean_0=true_mean,sig2_0=X_X,L=14.5)
+mod_chart = spm.MHWMA(p=4,phi=phi,k=opt_k(phi),mean_0=true_mean,sig2_0=True_sig,L=14.1)
+ex_chart = spm.EHWMA(p=4,phi=phi,phi2=0.1,mean_0=true_mean,sig2_0=True_sig,L=14.5)
 
 mod_t2 = []
 mod_ooc = []

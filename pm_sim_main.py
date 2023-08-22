@@ -13,7 +13,7 @@ from os import makedirs
 n = 100
 
 x_p = 2
-x_names = [f"X{i+1}" for i in range(x_p)]
+x_names = [f"X{i+1}" for i in range(3)]
 x_values = np.arange(-4,4.5,0.5)
 
 true_parms = [3.0,2.0,5.0]
@@ -26,13 +26,20 @@ delta_arr = [0, 0.5, 1.5, 3.0]
 print(x_values,np.mean(x_values))
 
 X_df = pd.DataFrame()
-for i in range(x_p):
-    X_df[x_names[i]] = x_values**(i+1)
+for i in range(3):
+    X_df[x_names[i]] = x_values**(i)
 
 print(X_df)
 
-X = 
 X_X = np.linalg.inv(np.array(X_df).T@np.array(X_df))
+
+True_sig = np.zeros((4,4))
+
+for i in range(3):
+    for j in range(3):
+        True_sig[i,j] = X_X[i,j]
+        
+True_sig[3,3] = 1
 
 sample_list = true_parms + [true_var]
 sample_list = [np.array(sample_list)]
@@ -41,7 +48,7 @@ print(sample_list)
 
 opt_k = lambda x: -x/2
 phi = 0.25
-chart = spm_schemes.MHWMA(p=(x_p+2),phi=phi,k=opt_k(phi),mean_0=sample_list[0],sig2_0=true_var*X_X)
+chart = spm_schemes.MHWMA(p=(x_p+2),phi=phi,k=opt_k(phi),mean_0=sample_list[0],sig2_0=True_sig)
 chart_name = chart.__class__.__name__
 print("Chart: " + chart_name)
 
@@ -112,13 +119,13 @@ for p in range(len(true_parms)+1):
                 Y += sts.norm(loc=0,scale=sim_var).rvs(len(x_values))
                 
                 # print(Y)
-                mdl = linear_model.LinearRegression()
-                mdl.fit(X_df,Y)
+                mdl = linear_model.LinearRegression(fit_intercept=False)
+                mdl.fit(X_df,Y,)
                 y_hat = mdl.predict(X_df)
                 mse = mean_squared_error(Y,y_hat)
 
-                est_parms = [mdl.intercept_]
-                for j in range(x_p):
+                est_parms = []
+                for j in range(len(mdl.coef_)):
                     est_parms += [mdl.coef_[j]]
                 est_parms += [mse]
                 sample_list += [np.array(est_parms)]
