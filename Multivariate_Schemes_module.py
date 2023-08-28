@@ -129,7 +129,7 @@ class MHWMA(SPM_Multi_chart):
     def chart_stat(self,series) -> float:
         x_bar = np.mean(series[:-1],0)
         St = self.phi*series[-1] + (1-self.phi)*x_bar + self.k*(series[-1]-series[-2])
-        self.chart_history = np.append(self.chart_history,St)
+        self.chart_history += [St]
         return St
 
     def chart_var(self,t) -> float:   

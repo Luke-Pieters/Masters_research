@@ -99,7 +99,7 @@ for p in range(len(true_parms)+1):
 
         if p < len(true_parms):
             shift_vec = change_parms
-            shift_vec[p] = d*np.sqrt(true_var) 
+            shift_vec[p] = d*np.sqrt(True_sig[p,p]) 
             sim_parm = true_parms + shift_vec
             sim_var = true_var
         else:
@@ -113,14 +113,14 @@ for p in range(len(true_parms)+1):
             ooc = False
             while ooc == False and t < 220:
                 t += 1
-                Y = sim_parm[0]
-                for j in range(x_p):
-                    Y += sim_parm[j+1]*X_df[x_names[j]] 
+                Y = 0
+                for j in range(3):
+                    Y += sim_parm[j]*X_df[x_names[j]] 
                 Y += sts.norm(loc=0,scale=sim_var).rvs(len(x_values))
                 
                 # print(Y)
                 mdl = linear_model.LinearRegression(fit_intercept=False)
-                mdl.fit(X_df,Y,)
+                mdl.fit(X_df,Y)
                 y_hat = mdl.predict(X_df)
                 mse = mean_squared_error(Y,y_hat)
 
