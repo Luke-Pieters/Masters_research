@@ -9,6 +9,19 @@ library(RColorBrewer)
 
 MHWMA_ml_exmpl_data <- read_csv("results/pm/MHWMA_ml_exmpl_data.csv")
 
+x_values = seq(-4,4,0.5)
+X0 = x_values**0
+X1 = x_values**1
+X2 = x_values**2
+
+b0 = 3
+b1 = 2
+b2 = 5
+
+Y = b0*X0 +b1*X1 +b2*X2
+
+profile_data = data.frame("Y"=Y,"X"=X1)
+
 theme_main <- function(){ 
   font <- "CenturySch"   #assign font family up front
   
@@ -79,6 +92,26 @@ display.brewer.pal(n = 8, name = 'RdBu')
 brewer.pal(n = 8, name = 'RdBu')
 
 colours <- c("TRUE"="#B2182B","FALSE"="#2166AC")
+
+profile_plot <- profile_data %>%
+  ggplot(aes(x=X,y=Y))+
+  geom_hline(yintercept = 0,col="#2166AC",size=1,alpha=0.5)+
+  geom_vline(xintercept = 0,col="#2166AC",size=1,alpha=0.5)+
+  geom_path(size=1.3,col="#B2182B")+
+  labs(title = "IC Profile")+
+  xlim(-4,4)+
+  xlab('X')+
+  ylab('Y')+
+  theme_main()
+
+print(profile_plot)
+ggsave(plot=profile_plot,
+       filename= "pm_example.png",
+       path = "results/Plots",
+       dpi=320,
+       width=8.70,
+       height=5.95,
+)
 
 mod_plot <- MHWMA_ml_exmpl_data %>%
   ggplot(aes(x=t,y=T2,col=OOC,group=1))+
