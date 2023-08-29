@@ -10,14 +10,15 @@ from ProgressBar_module import printProgressBar
 from os import makedirs
 
 #CHART TO TEST
-n = 1000
+n = 100
 
 x_p = 2
 x_names = [f"X{i+1}" for i in range(3)]
 x_values = np.arange(-4,4.5,0.5)
+x_n = len(x_values)
 
 true_parms = [3.0,2.0,5.0]
-true_var = 1.0
+true_var = 0
 
 change_parms = np.zeros(len(true_parms))
 delta_arr = [0, 0.5, 1.5, 3.0]
@@ -39,7 +40,10 @@ for i in range(3):
     for j in range(3):
         True_sig[i,j] = X_X[i,j]
         
-True_sig[3,3] = 1
+True_sig[3,3] += 2/(x_n -2)
+True_sig[3,3] += 2/((x_n -2)**2)
+True_sig[3,3] += 4/(3*(x_n -2)**2)
+True_sig[3,3] -= 16/(15*(x_n -2)**2)
 
 sample_list = true_parms + [true_var]
 sample_list = [np.array(sample_list)]
@@ -48,14 +52,15 @@ print(sample_list)
 
 opt_k = lambda x: -x/2
 phi = 0.25
-chart = spm_schemes.MHWMA(p=(x_p+2),phi=phi,k=opt_k(phi),mean_0=sample_list[0],sig2_0=True_sig)
+phi2 = 0.1
+chart = spm_schemes.EHWMA(p=(x_p+2),phi=phi,phi2=phi2,k=opt_k(phi),mean_0=sample_list[0],sig2_0=True_sig)
 chart_name = chart.__class__.__name__
 print("Chart: " + chart_name)
 
 with open(f'results\multivar_{chart_name}_optimal_L.json') as json_file:
        L_arr = json.load(json_file)
 
-L = L_arr[str(f"p={x_p+2}")][str(phi)]
+L = L_arr[str(f"p={x_p+2}")][str(phi)][str(phi2)]
 chart.change_L(L)
 
 # sts.norm(loc=mu_0,scale=sig_0).rvs(1)
@@ -101,7 +106,7 @@ for p in range(len(true_parms)+1):
             shift_vec = np.zeros(len(true_parms))
             shift_vec[p] = d*np.sqrt(True_sig[p,p]) 
             sim_parm = true_parms + shift_vec
-            sim_var = true_var
+            sim_var = 1
         else:
             sim_var = (1 + d)*2
             sim_parm = true_parms
@@ -128,11 +133,12 @@ for p in range(len(true_parms)+1):
                 mdl.fit(X_df,Y)
                 y_hat = mdl.predict(X_df)
                 mse = mean_squared_error(Y,y_hat)
+                ln_mse = np.log(mse)
 
                 est_parms = []
                 for j in range(len(mdl.coef_)):
                     est_parms += [mdl.coef_[j]]
-                est_parms += [mse]
+                est_parms += [ln_mse]
                 sample_list += [np.array(est_parms)]
                 St = chart.chart_stat(sample_list)
                 T2 = chart.T2_stat(St,t)
