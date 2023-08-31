@@ -40,10 +40,7 @@ for i in range(3):
     for j in range(3):
         True_sig[i,j] = X_X[i,j]
         
-True_sig[3,3] += 2/(x_n -2)
-True_sig[3,3] += 2/((x_n -2)**2)
-True_sig[3,3] += 4/(3*(x_n -2)**2)
-True_sig[3,3] -= 16/(15*(x_n -2)**2)
+True_sig[3,3] = 1
 
 sample_list = true_parms + [true_var]
 sample_list = [np.array(sample_list)]
@@ -60,6 +57,7 @@ print("Chart: " + chart_name)
 with open(f'results\multivar_{chart_name}_optimal_L.json') as json_file:
        L_arr = json.load(json_file)
 
+# L = L_arr[str(f"p={x_p+2}")][str(phi)]
 L = L_arr[str(f"p={x_p+2}")][str(phi)][str(phi2)]
 chart.change_L(L)
 
@@ -106,9 +104,9 @@ for p in range(len(true_parms)+1):
             shift_vec = np.zeros(len(true_parms))
             shift_vec[p] = d*np.sqrt(True_sig[p,p]) 
             sim_parm = true_parms + shift_vec
-            sim_var = 1
+            sim_var = 0
         else:
-            sim_var = (1 + d)*2
+            sim_var = (0 + d)*2
             sim_parm = true_parms
         t_arr = []
         print("="*30)
@@ -121,7 +119,7 @@ for p in range(len(true_parms)+1):
             sample_list = [np.array(sample_list)]
             t = 0
             ooc = False
-            while ooc == False and t < 220:
+            while ooc == False and t < 200:
                 t += 1
                 Y = 0
                 for j in range(3):
@@ -133,12 +131,12 @@ for p in range(len(true_parms)+1):
                 mdl.fit(X_df,Y)
                 y_hat = mdl.predict(X_df)
                 mse = mean_squared_error(Y,y_hat)
-                ln_mse = np.log(mse)
+                # ln_mse = np.log(mse)
 
                 est_parms = []
                 for j in range(len(mdl.coef_)):
                     est_parms += [mdl.coef_[j]]
-                est_parms += [ln_mse]
+                est_parms += [mse]
                 sample_list += [np.array(est_parms)]
                 St = chart.chart_stat(sample_list)
                 T2 = chart.T2_stat(St,t)
