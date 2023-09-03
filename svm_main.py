@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn import svm
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
 from sklearn.preprocessing import StandardScaler
@@ -27,11 +28,38 @@ shift_sizes = {0:'-',0.5:"small",1.5:"medium",3:"large"}
 df['Shift_size'] = [shift_sizes[df['Delta'][i]] for i in df.index]
 
 #SCALE PREDICTORS
-# df['B0'] -= np.mean(df['B0'])
-# df['B1'] -= np.mean(df['B1'])
-# df['B2'] -= np.mean(df['B2'])
-# df['S2'] -= np.mean(df['S2'])
-# df['T2'] -= np.mean(df['T2'])
+means = {"B0":3.0,
+              "B1":2.0,
+              "B2":5.0,
+              "S2":0}
+ 
+x_names = [f"X{i+1}" for i in range(3)]
+x_values = np.arange(-4,4.5,0.5)
+X_df = pd.DataFrame()
+for i in range(3):
+    X_df[x_names[i]] = x_values**(i)
+
+print(X_df)
+
+X_X = np.linalg.inv(np.array(X_df).T@np.array(X_df))
+
+True_sig = np.zeros((4,4))
+
+for i in range(3):
+    for j in range(3):
+        True_sig[i,j] = X_X[i,j]
+        
+True_sig[3,3] = 1
+
+parm_vars = {"B0":True_sig[0,0],
+        "B1":True_sig[1,1],
+        "B2":True_sig[2,2],
+        "S2":True_sig[3,3]}
+
+df['B0'] = (df['B0'] - means['B0'])/np.sqrt(parm_vars['B0'])
+df['B1'] = (df['B1'] - means['B1'])/np.sqrt(parm_vars['B1'])
+df['B2'] = (df['B2'] - means['B2'])/np.sqrt(parm_vars['B2'])
+df['S2'] = (df['S2'] - means['S2'])/np.sqrt(parm_vars['S2'])
 
 print(df.head())
 
@@ -66,7 +94,7 @@ print("="*30)
 X_train, X_test, ss_y_train, ss_y_test = train_test_split(df[['B0','B1','B2','S2']], df['Shift_size'], test_size=0.3,random_state=109) # 70% training and 30% test
 
 print('Training Shift-Size Model: DT')
-ss_mdl = DecisionTreeClassifier()
+ss_mdl = RandomForestClassifier()
 ss_mdl.fit(X_train, ss_y_train)
 ss_pred = ss_mdl.predict(X_test)
 
@@ -101,7 +129,7 @@ print("="*30)
 #==================================================================================
 
 #read data
-exml_df = pd.read_csv('results/pm/MHWMA_ml_exmpl_data.csv')
+exml_df = pd.read_csv('results/pm/ml_exmpl_data.csv')
 
 #make latex table 
 filepath = "./results/pm/tables"
@@ -132,28 +160,12 @@ print(f"table saved in {filename}")
 opt_k = lambda x: -x/2
 phi = 0.25
 
-x_names = [f"X{i+1}" for i in range(3)]
-x_values = np.arange(-4,4.5,0.5)
-X_df = pd.DataFrame()
-for i in range(3):
-    X_df[x_names[i]] = x_values**(i)
 
-print(X_df)
-
-X_X = np.linalg.inv(np.array(X_df).T@np.array(X_df))
-
-True_sig = np.zeros((4,4))
-
-for i in range(3):
-    for j in range(3):
-        True_sig[i,j] = X_X[i,j]
-        
-True_sig[3,3] = 1
 
 print(True_sig)
 
 true_parms = [3.0,2.0,5.0]
-true_var = 1.0
+true_var = 0
 
 true_mean = true_parms + [true_var]
 true_mean = np.array(true_mean)
@@ -184,10 +196,22 @@ for r in range(raw_df.shape[0]):
 print(raw_df.iloc[-3:,1:])
 print(raw_df.iloc[-3,1:])
 
+pred_x_data_std = raw_df.copy()
+
+pred_x_data_std['B0'] = (pred_x_data_std['B0'] - means['B0'])/np.sqrt(parm_vars['B0'])
+pred_x_data_std['B1'] = (pred_x_data_std['B1'] - means['B1'])/np.sqrt(parm_vars['B1'])
+pred_x_data_std['B2'] = (pred_x_data_std['B2'] - means['B2'])/np.sqrt(parm_vars['B2'])
+pred_x_data_std['S2'] = (pred_x_data_std['S2'] - means['S2'])/np.sqrt(parm_vars['S2'])
+
+pred_x_data_std = pred_x_data_std[['B0','B1','B2','S2']]
+pred_x_data_std = pred_x_data_std.iloc[-3:,:]
+
+print(pred_x_data_std)
+
 parm = ['-']*5
 size = ['-']*5
-pred_parm = parm_mdl.predict(X=raw_df.iloc[-3:,1:])
-pred_ss = ss_mdl.predict(X=raw_df.iloc[-3:,1:])
+pred_parm = parm_mdl.predict(X=pred_x_data_std)
+pred_ss = ss_mdl.predict(X=pred_x_data_std)
 
 print(pred_parm)
 
@@ -201,6 +225,13 @@ mod_tbl['OOC'] = mod_ooc
 mod_tbl['Predicted Parameter'] = [parm_names[x] for x in parm]
 mod_tbl['Predicted Shift Size'] = size
 
+ex_tbl = raw_df.copy()
+ex_tbl['T2'] = ex_t2
+ex_tbl['OOC'] = ex_ooc
+ex_tbl['Predicted Parameter'] = [parm_names[x] for x in parm]
+ex_tbl['Predicted Shift Size'] = size
+
+
 col_symb += ["{\color[HTML]{FFFFFF} $T^2$ }"]
 col_symb += ["{\color[HTML]{FFFFFF} OOC }"]
 col_symb += ["{\color[HTML]{FFFFFF} Predicted Parameter }"]
@@ -209,9 +240,17 @@ col_symb += ["{\color[HTML]{FFFFFF} Predicted Shift Size }"]
 spacing = "{ | " + ">{\\\\centering\\\\arraybackslash}m{0.03\\\\textwidth} | " + ">{\\\\centering\\\\arraybackslash}m{0.09\\\\textwidth} "*(len(col_symb)-1) + " | }"
 
 tbl = str(tabulate(mod_tbl,col_symb,tablefmt="latex_raw",floatfmt=float_fmt,showindex="never"))
-tbl = re.sub(r"\{r+\}",spacing,tbl)
+tbl = re.sub(r"\{rrrrrrlll\}",spacing,tbl)
 tbl = re.sub(r"\\hline",r"\\hline \\rowcolor[HTML]{4A6FCC} ",tbl,count=1)
 
 filename = filepath + "/" + "_example_mod_chart_table.txt"
+with open(filename, "w") as f:
+    print(tbl, file=f)
+    
+tbl = str(tabulate(ex_tbl,col_symb,tablefmt="latex_raw",floatfmt=float_fmt,showindex="never"))
+tbl = re.sub(r"\{rrrrrrlll\}",spacing,tbl)
+tbl = re.sub(r"\\hline",r"\\hline \\rowcolor[HTML]{4A6FCC} ",tbl,count=1)
+
+filename = filepath + "/" + "_example_ex_chart_table.txt"
 with open(filename, "w") as f:
     print(tbl, file=f)
