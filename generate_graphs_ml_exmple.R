@@ -8,6 +8,7 @@ library(dplyr)
 library(RColorBrewer)
 
 MHWMA_ml_exmpl_data <- read_csv("results/pm/MHWMA_ml_exmpl_data.csv")
+EHWMA_ml_exmpl_data <- read_csv("results/pm/EHWMA_ml_exmpl_data.csv")
 
 x_values = seq(-4,4,0.5)
 X0 = x_values**0
@@ -120,7 +121,7 @@ mod_plot <- MHWMA_ml_exmpl_data %>%
   geom_hline(yintercept = 14,col='#B2182B',linetype='dashed',size=1.3)+
   geom_text(aes(1,14,label = 'h=14', vjust = -1),col='#B2182B')+
   geom_path(size=1.3)+
-  geom_point(size=2)+
+  geom_point(size=3)+
   scale_color_manual(values = colours)+
   labs(title = "Charting statisitc for each sample")+
   xlab('t')+
@@ -131,6 +132,30 @@ mod_plot <- MHWMA_ml_exmpl_data %>%
 print(mod_plot)
 ggsave(plot=mod_plot,
        filename= "modified_ml_example_chart.png",
+       path = "results/Plots",
+       dpi=320,
+       width=8.70,
+       height=5.95,
+)
+
+ex_plot <- EHWMA_ml_exmpl_data %>%
+  ggplot(aes(x=t,y=T2,col=OOC,group=1))+
+  annotate("rect", xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = 14, fill = "#4393C3", alpha = .5, color = NA)+
+  annotate("rect", xmin = -Inf, xmax = Inf, ymin = 14, ymax = Inf, fill = "#D6604D", alpha = .5, color = NA)+
+  geom_hline(yintercept = 14,col='#B2182B',linetype='dashed',size=1.3)+
+  geom_text(aes(1,14,label = 'h=14', vjust = -1),col='#B2182B')+
+  geom_path(size=1.3)+
+  geom_point(size=3)+
+  scale_color_manual(values = colours)+
+  labs(title = "Charting statisitc for each sample")+
+  xlab('t')+
+  xlim(1,8)+
+  ylab('T2')+
+  theme_main()
+
+print(ex_plot)
+ggsave(plot=ex_plot,
+       filename= "extended_ml_example_chart.png",
        path = "results/Plots",
        dpi=320,
        width=8.70,

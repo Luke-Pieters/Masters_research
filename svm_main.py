@@ -5,7 +5,6 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
-from sklearn.preprocessing import StandardScaler
 
 import Multivariate_Schemes_module as spm
 from tabulate import tabulate
@@ -91,7 +90,7 @@ print("Accuracy:",metrics.accuracy_score(id_y_test, parm_pred))
 print("="*30)
 
 #SHIFT SIZE IDENTIFIEER
-X_train, X_test, ss_y_train, ss_y_test = train_test_split(df[['B0','B1','B2','S2']], df['Shift_size'], test_size=0.3,random_state=109) # 70% training and 30% test
+X_train, X_test, ss_y_train, ss_y_test = train_test_split(df[['B0','B1','B2','S2','T2']], df['Shift_size'], test_size=0.3,random_state=109) # 70% training and 30% test
 
 print('Training Shift-Size Model: DT')
 ss_mdl = RandomForestClassifier()
@@ -173,7 +172,7 @@ true_mean = np.array(true_mean)
 series = [true_mean]
 
 mod_chart = spm.MHWMA(p=4,phi=phi,k=opt_k(phi),mean_0=true_mean,sig2_0=True_sig,L=14.1)
-ex_chart = spm.EHWMA(p=4,phi=phi,phi2=0.1,mean_0=true_mean,sig2_0=True_sig,L=14.5)
+ex_chart = spm.EHWMA(p=4,phi=phi,phi2=0.05,mean_0=true_mean,sig2_0=True_sig,L=14.5)
 
 mod_t2 = []
 mod_ooc = []
@@ -188,7 +187,7 @@ for r in range(raw_df.shape[0]):
     ex_stat = ex_chart.chart_stat(series=series)
 
     mod_t2 += [mod_chart.T2_stat(mod_stat,t=(r+1))]
-    ex_t2 += [ex_chart.T2_stat(mod_stat,t=(r+1))]
+    ex_t2 += [ex_chart.T2_stat(ex_stat,t=(r+1))]
 
     mod_ooc += [mod_chart.check_ooc(mod_stat,t=(r+1))]
     ex_ooc += [ex_chart.check_ooc(ex_stat,t=(r+1))]
@@ -209,27 +208,36 @@ pred_x_data_std = pred_x_data_std.iloc[-3:,:]
 print(pred_x_data_std)
 
 parm = ['-']*5
-size = ['-']*5
+mod_size = ['-']*5
+ex_size = ['-']*5
 pred_parm = parm_mdl.predict(X=pred_x_data_std)
-pred_ss = ss_mdl.predict(X=pred_x_data_std)
+
+pred_x_data_std['T2'] = mod_t2[-3:]
+mod_pred_ss = ss_mdl.predict(X=pred_x_data_std)
+pred_x_data_std['T2'] = ex_t2[-3:]
+ex_pred_ss = ss_mdl.predict(X=pred_x_data_std)
 
 print(pred_parm)
 
 for i in range(3):
     parm += [pred_parm[i]] 
-    size += [pred_ss[i]]
+    mod_size += [mod_pred_ss[i]]
+    ex_size += [ex_pred_ss[i]]
 
 mod_tbl = raw_df.copy()
 mod_tbl['T2'] = mod_t2
 mod_tbl['OOC'] = mod_ooc
 mod_tbl['Predicted Parameter'] = [parm_names[x] for x in parm]
-mod_tbl['Predicted Shift Size'] = size
+mod_tbl['Predicted Shift Size'] = mod_size
 
 ex_tbl = raw_df.copy()
 ex_tbl['T2'] = ex_t2
 ex_tbl['OOC'] = ex_ooc
 ex_tbl['Predicted Parameter'] = [parm_names[x] for x in parm]
-ex_tbl['Predicted Shift Size'] = size
+ex_tbl['Predicted Shift Size'] = ex_size
+
+mod_tbl.to_csv('results/pm/MHWMA_ml_exmpl_data.csv',index=False,mode='w')
+ex_tbl.to_csv('results/pm/EHWMA_ml_exmpl_data.csv',index=False,mode='w')
 
 
 col_symb += ["{\color[HTML]{FFFFFF} $T^2$ }"]
