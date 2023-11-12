@@ -60,7 +60,7 @@ def sig_transformed(x,x_n,x_p,true_var):
     chi_prob=sts.chi2.cdf(c2,x_n-x_p)
     
     if chi_prob == 1:
-        norm_q = 3
+        norm_q = 8
     else:
         norm_q = sts.norm.ppf(chi_prob,loc=0,scale=1)
     return norm_q

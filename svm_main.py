@@ -15,6 +15,7 @@ import re
 df = pd.read_csv("results\pm\MHWMA_ml_data.csv")
 
 df = df[df['Delta']>0]
+df = df[df['S2']!=3]
 
 parm_names = {0:"B0",
               1:"B1",
@@ -22,14 +23,24 @@ parm_names = {0:"B0",
               3:"S2",
               '-':'-'}
 
-shift_sizes = {0:'-',0.5:"small",1.5:"medium",3:"large"}
+shift_sizes = {0:'-',0.25:"small",1.5:"medium",3:"large"}
 
-df['Shift_size'] = [shift_sizes[df['Delta'][i]] for i in df.index]
+# df['Delta'][df['Parm']==3] = df['Delta'][df['Parm']==3] -1
+
+def convert_shift(x):
+    if (x <= 1):
+        return 0.25
+    elif (x > 1 and x < 2 ):
+        return 1.5
+    else:
+        return 3
+
+df['Shift_size'] = [shift_sizes[convert_shift(x)] for x in df['Delta']]
 
 #SCALE PREDICTORS
-means = {"B0":3.0,
-              "B1":2.0,
-              "B2":5.0,
+means = {"B0":0,
+              "B1":0,
+              "B2":0,
               "S2":0}
  
 x_names = [f"X{i+1}" for i in range(3)]
@@ -50,17 +61,17 @@ for i in range(3):
         
 True_sig[3,3] = 1
 
-parm_vars = {"B0":True_sig[0,0],
-        "B1":True_sig[1,1],
-        "B2":True_sig[2,2],
-        "S2":True_sig[3,3]}
+# parm_vars = {"B0":True_sig[0,0],
+#         "B1":True_sig[1,1],
+#         "B2":True_sig[2,2],
+#         "S2":True_sig[3,3]}
 
-df['B0'] = (df['B0'] - means['B0'])/np.sqrt(parm_vars['B0'])
-df['B1'] = (df['B1'] - means['B1'])/np.sqrt(parm_vars['B1'])
-df['B2'] = (df['B2'] - means['B2'])/np.sqrt(parm_vars['B2'])
-df['S2'] = (df['S2'] - means['S2'])/np.sqrt(parm_vars['S2'])
+# df['B0'] = (df['B0'] - means['B0'])/np.sqrt(parm_vars['B0'])
+# df['B1'] = (df['B1'] - means['B1'])/np.sqrt(parm_vars['B1'])
+# df['B2'] = (df['B2'] - means['B2'])/np.sqrt(parm_vars['B2'])
+# df['S2'] = (df['S2'] - means['S2'])/np.sqrt(parm_vars['S2'])
 
-print(df.head())
+print(df.tail())
 
 #PARAMETER IDETIFIER
 X_train, X_test, id_y_train, id_y_test = train_test_split(df[['B0','B1','B2','S2']], df['Parm'], test_size=0.3,random_state=109) # 70% training and 30% test
@@ -90,7 +101,7 @@ print("Accuracy:",metrics.accuracy_score(id_y_test, parm_pred))
 print("="*30)
 
 #SHIFT SIZE IDENTIFIEER
-X_train, X_test, ss_y_train, ss_y_test = train_test_split(df[['B0','B1','B2','S2','T2']], df['Shift_size'], test_size=0.3,random_state=109) # 70% training and 30% test
+X_train, X_test, ss_y_train, ss_y_test = train_test_split(df[['B0','B1','B2','S2','Parm']], df['Shift_size'], test_size=0.3,random_state=109) # 70% training and 30% test
 
 print('Training Shift-Size Model: SVM')
 ss_mdl = svm.LinearSVC(multi_class='ovr',max_iter=10000,C=0.8)
@@ -174,7 +185,7 @@ phi = 0.25
 
 print(True_sig)
 
-true_parms = [3.0,2.0,5.0]
+true_parms = [0,0,0]
 true_var = 0
 
 true_mean = true_parms + [true_var]
@@ -208,10 +219,10 @@ print(raw_df.iloc[-3,1:])
 
 pred_x_data_std = raw_df.copy()
 
-pred_x_data_std['B0'] = (pred_x_data_std['B0'] - means['B0'])/np.sqrt(parm_vars['B0'])
-pred_x_data_std['B1'] = (pred_x_data_std['B1'] - means['B1'])/np.sqrt(parm_vars['B1'])
-pred_x_data_std['B2'] = (pred_x_data_std['B2'] - means['B2'])/np.sqrt(parm_vars['B2'])
-pred_x_data_std['S2'] = (pred_x_data_std['S2'] - means['S2'])/np.sqrt(parm_vars['S2'])
+# pred_x_data_std['B0'] = (pred_x_data_std['B0'] - means['B0'])/np.sqrt(parm_vars['B0'])
+# pred_x_data_std['B1'] = (pred_x_data_std['B1'] - means['B1'])/np.sqrt(parm_vars['B1'])
+# pred_x_data_std['B2'] = (pred_x_data_std['B2'] - means['B2'])/np.sqrt(parm_vars['B2'])
+# pred_x_data_std['S2'] = (pred_x_data_std['S2'] - means['S2'])/np.sqrt(parm_vars['S2'])
 
 pred_x_data_std = pred_x_data_std[['B0','B1','B2','S2']]
 pred_x_data_std = pred_x_data_std.iloc[-3:,:]
@@ -223,9 +234,9 @@ mod_size = ['-']*5
 ex_size = ['-']*5
 pred_parm = parm_mdl.predict(X=pred_x_data_std)
 
-pred_x_data_std['T2'] = mod_t2[-3:]
+pred_x_data_std['Parm'] = pred_parm
 mod_pred_ss = ss_mdl.predict(X=pred_x_data_std)
-pred_x_data_std['T2'] = ex_t2[-3:]
+pred_x_data_std['Parm'] = pred_parm
 ex_pred_ss = ss_mdl.predict(X=pred_x_data_std)
 
 print(pred_parm)
