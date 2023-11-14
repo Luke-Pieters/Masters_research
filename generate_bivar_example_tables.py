@@ -29,6 +29,7 @@ print(mean_df)
 # Process parameters:
 mean_0 = np.array([28.29, 45.85])
 sig_0 = np.array([[0.0035, -0.0046], [-0.0046, 0.0226]])
+sig_0 = sig_0/5
 
 opt_k = lambda x: -x/2
 
@@ -72,4 +73,43 @@ makedirs(filepath, exist_ok=True)
 
 mod_tbl.to_csv('./results/examples/MHWMA_bivar_exmpl_results.csv',index=False,mode='w')
 ex_tbl.to_csv('./results/examples/EHWMA_bivar_exmpl_results.csv',index=False,mode='w')
+
+cols = ['t','X11','X12','X13','X14','X15','X21','X22','X23','X24','X25','T2','OOC']
+col_symb = ['t','X11','X12','$X_1$','X14','X15','X21','X22','$X_2$','X24','X25']
+col_symb = ["{\color[HTML]{FFFFFF}" + x + "}" for x in col_symb]
+col_symb += ["{\color[HTML]{FFFFFF} $T^2$ }"]
+col_symb += ["{\color[HTML]{FFFFFF} OOC }"]
+
+spacing = "{ | " + ">{\\\\centering\\\\arraybackslash}m{0.02\\\\textwidth} | " 
+spacing += ">{\\\\centering\\\\arraybackslash}m{0.045\\\\textwidth} "*(5) + "|"
+spacing += ">{\\\\centering\\\\arraybackslash}m{0.045\\\\textwidth} "*(5) + "|"
+spacing += ">{\\\\centering\\\\arraybackslash}m{0.04\\\\textwidth} " + "|"
+spacing += ">{\\\\centering\\\\arraybackslash}m{0.045\\\\textwidth}"
+spacing += " | }"
+
+float_fmt = ['.2f']*(len(cols)-1)
+float_fmt = ['.0f'] + float_fmt
+float_fmt = tuple(float_fmt)
+
+tbl = str(tabulate(mod_tbl,col_symb,tablefmt="latex_raw",floatfmt=float_fmt,showindex="never"))
+tbl = re.sub(r"\{r+l\}",spacing,tbl)
+tbl = re.sub(r"X\d{2}","",tbl)
+tbl = re.sub(r"True",r"{\\color[HTML]{B2182B}True}",tbl)
+tbl = re.sub(r"\\hline",r"\\hline \\rowcolor[HTML]{4A6FCC} ",tbl,count=1)
+print(tbl)
+
+filename = filepath + "/" + "bivar_example_mod_chart_table.txt"
+with open(filename, "w") as f:
+    print(tbl, file=f)
+    
+tbl = str(tabulate(ex_tbl,col_symb,tablefmt="latex_raw",floatfmt=float_fmt,showindex="never"))
+tbl = re.sub(r"\{r+l\}",spacing,tbl)
+tbl = re.sub(r"X\d{2}","",tbl)
+tbl = re.sub(r"True",r"{\\color[HTML]{B2182B}True}",tbl)
+tbl = re.sub(r"\\hline",r"\\hline \\rowcolor[HTML]{4A6FCC} ",tbl,count=1)
+print(tbl)
+
+filename = filepath + "/" + "bivar_example_ex_chart_table.txt"
+with open(filename, "w") as f:
+    print(tbl, file=f)
 

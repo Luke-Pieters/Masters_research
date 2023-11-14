@@ -271,6 +271,7 @@ spacing = "{ | " + ">{\\\\centering\\\\arraybackslash}m{0.03\\\\textwidth} | " +
 
 tbl = str(tabulate(mod_tbl,col_symb,tablefmt="latex_raw",floatfmt=float_fmt,showindex="never"))
 tbl = re.sub(r"\{rrrrrrlll\}",spacing,tbl)
+tbl = re.sub(r"True",r"{\\color[HTML]{B2182B}True}",tbl)
 tbl = re.sub(r"\\hline",r"\\hline \\rowcolor[HTML]{4A6FCC} ",tbl,count=1)
 
 filename = filepath + "/" + "_example_mod_chart_table.txt"
@@ -279,6 +280,7 @@ with open(filename, "w") as f:
     
 tbl = str(tabulate(ex_tbl,col_symb,tablefmt="latex_raw",floatfmt=float_fmt,showindex="never"))
 tbl = re.sub(r"\{rrrrrrlll\}",spacing,tbl)
+tbl = re.sub(r"True",r"{\\color[HTML]{B2182B}True}",tbl)
 tbl = re.sub(r"\\hline",r"\\hline \\rowcolor[HTML]{4A6FCC} ",tbl,count=1)
 
 filename = filepath + "/" + "_example_ex_chart_table.txt"
