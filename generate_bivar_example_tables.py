@@ -113,3 +113,28 @@ filename = filepath + "/" + "bivar_example_ex_chart_table.txt"
 with open(filename, "w") as f:
     print(tbl, file=f)
 
+
+#==========================================================================================================
+# RAW DATA TABLES
+#==========================================================================================================
+
+col_symb = ['t','X11','X12','$X_1$','X14','X15','X21','X22','$X_2$','X24','X25']
+col_symb = ["{\color[HTML]{FFFFFF}" + x + "}" for x in col_symb]
+
+spacing = "{ | " + ">{\\\\centering\\\\arraybackslash}m{0.02\\\\textwidth} | " 
+spacing += ">{\\\\centering\\\\arraybackslash}m{0.045\\\\textwidth} "*(5) + "|"
+spacing += ">{\\\\centering\\\\arraybackslash}m{0.045\\\\textwidth} "*(5) + "| }"
+
+float_fmt = ['.2f']*(df.shape[1]-1)
+float_fmt = ['.0f'] + float_fmt
+float_fmt = tuple(float_fmt)
+
+tbl = str(tabulate(df,col_symb,tablefmt="latex_raw",floatfmt=float_fmt,showindex="never"))
+tbl = re.sub(r"\{r+\}",spacing,tbl)
+tbl = re.sub(r"X\d{2}","",tbl)
+tbl = re.sub(r"\\hline",r"\\hline \\rowcolor[HTML]{4A6FCC} ",tbl,count=1)
+print(tbl)
+
+filename = filepath + "/" + "bivar_example_raw_table.txt"
+with open(filename, "w") as f:
+    print(tbl, file=f)
