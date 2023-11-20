@@ -1,0 +1,10 @@
+\begin{tabular}{ | >{\centering\arraybackslash}m{0.09\textwidth} >{\centering\arraybackslash}m{0.09\textwidth} | }
+\hline \rowcolor[HTML]{4A6FCC} 
+ {\color[HTML]{FFFFFF}$\boldsymbol{\phi}$} & {\color[HTML]{FFFFFF}$\boldsymbol{L}$} \\
+\hline
+ 0.100 & 2.317 \\
+ 0.250 & 2.688 \\
+ 0.500 & 2.784 \\
+ 0.900 & 2.785 \\
+\hline
+\end{tabular}

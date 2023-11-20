@@ -1,0 +1,24 @@
+\begin{tabular}{ | >{\centering\arraybackslash}m{0.03\textwidth} | >{\centering\arraybackslash}m{0.09\textwidth} >{\centering\arraybackslash}m{0.09\textwidth} >{\centering\arraybackslash}m{0.09\textwidth} | }
+\hline \rowcolor[HTML]{4A6FCC} 
+ {\color[HTML]{FFFFFF}{\color[HTML]{FFFFFF}$\boldsymbol{p}$}} & {\color[HTML]{FFFFFF}{\color[HTML]{FFFFFF}$\boldsymbol{\phi_1}$}} & {\color[HTML]{FFFFFF}{\color[HTML]{FFFFFF}$\boldsymbol{\phi_2}$}} & {\color[HTML]{FFFFFF}{\color[HTML]{FFFFFF}$\boldsymbol{L}$}} \\
+\hline
+ 2 & 0.100 & 0.010 & 8.775 \\
+ & 0.100 & 0.050 & 8.961 \\
+ & 0.100 & 0.090 & 9.297 \\
+ 2 & 0.250 & 0.050 & 10.297 \\
+ & 0.250 & 0.100 & 10.312 \\
+ & 0.250 & 0.200 & 10.297 \\
+ 3 & 0.100 & 0.010 & 10.856 \\
+ & 0.100 & 0.050 & 11.162 \\
+ & 0.100 & 0.090 & 11.484 \\
+ 3 & 0.250 & 0.050 & 12.554 \\
+ & 0.250 & 0.100 & 12.478 \\
+ & 0.250 & 0.200 & 12.554 \\
+ 4 & 0.100 & 0.010 & 12.846 \\
+ & 0.100 & 0.050 & 13.095 \\
+ & 0.100 & 0.090 & 13.441 \\
+ 4 & 0.250 & 0.050 & 14.499 \\
+ & 0.250 & 0.100 & 14.543 \\
+ & 0.250 & 0.200 & 14.533 \\
+\hline
+\end{tabular}
