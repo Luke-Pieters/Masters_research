@@ -65,10 +65,13 @@ def sig_transformed(x,x_n,x_p,true_var):
         norm_q = sts.norm.ppf(chi_prob,loc=0,scale=1)
     return norm_q
 
-
-phi = 0.25
-phi2 = 0.1
-chart = spm_schemes.MHWMA(p=(x_p+2),phi=phi,phi2=phi2,k=opt_k(phi),mean_0=mu_0,sig2_0=True_sig)
+# Output 1
+# phi = 0.25
+# phi2 = 0.1
+# Output 2
+phi = 0.1
+phi2 = 0.09
+chart = spm_schemes.MHWMA(p=4,phi=phi,phi2=phi2,k=opt_k(phi),mean_0=mu_0,sig2_0=True_sig)
 chart_name = chart.__class__.__name__
 print("Chart: " + chart_name)
 
@@ -79,7 +82,7 @@ L = L_arr[str(f"p={4}")][str(phi)]
 # chart.change_L(L+18.6)
 # L = L_arr[str(f"p={x_p+1}")][str(phi)][str(phi2)] 
 print('L: ',L)
-chart.change_L(L+12) #+9
+chart.change_L(L+12) 
 
 # sts.norm(loc=mu_0,scale=sig_0).rvs(1)
 # 
@@ -93,7 +96,7 @@ chart.change_L(L+12) #+9
 
 filepath = "./results/pm/"
 # filename = filepath + "/" + chart_name + "_ARL_SDRL_MRL_results.csv"
-filename = filepath + "/" + chart_name + "_pm_results.csv"
+filename = filepath + "/" + chart_name + "_pm_results_2.csv"
 ml_filename = filepath + "/" + chart_name + "_ml_data.csv"
 makedirs(filepath, exist_ok=True)
 
@@ -179,17 +182,17 @@ for p in range(len(true_parms)+1):
             t_arr += [t]
             
 
-            ml_newrow = pd.Series({'Parm': p,
-                            'Delta': d,
-                            'B0': sample_list[-1][0],
-                            'B1': sample_list[-1][1],
-                            'B2':sample_list[-1][2],
-                            'S2':sample_list[-1][3],
-                            'T2':T2})
+            # ml_newrow = pd.Series({'Parm': p,
+            #                 'Delta': d,
+            #                 'B0': sample_list[-1][0],
+            #                 'B1': sample_list[-1][1],
+            #                 'B2':sample_list[-1][2],
+            #                 'S2':sample_list[-1][3],
+            #                 'T2':T2})
             
-            if ml_counter <= ml_n:
-                ml_df = pd.concat([ml_df,ml_newrow.to_frame().T],ignore_index=True)
-                ml_df.to_csv(ml_filename,index=False,mode='w') #update csv file
+            # if ml_counter <= 0:
+            #     ml_df = pd.concat([ml_df,ml_newrow.to_frame().T],ignore_index=True)
+            #     ml_df.to_csv(ml_filename,index=False,mode='w') #update csv file
 
             chart.reset_chart()
 
