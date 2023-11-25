@@ -23,7 +23,7 @@ true_var = 1
 
 change_parms = np.zeros(len(true_parms))
 # delta_arr = [0, 0.5, 1.5, 3.0]
-delta_arr = np.arange(0,3.25,0.25)
+delta_arr = np.arange(0.25,3.25,0.25)
 # delta_arr = [ 3.0]
 
 print(x_values,np.mean(x_values))
@@ -71,16 +71,16 @@ def sig_transformed(x,x_n,x_p,true_var):
 # Output 2
 phi = 0.1
 phi2 = 0.09
-chart = spm_schemes.MHWMA(p=4,phi=phi,phi2=phi2,k=opt_k(phi),mean_0=mu_0,sig2_0=True_sig)
+chart = spm_schemes.EHWMA(p=4,phi=phi,phi2=phi2,k=opt_k(phi),mean_0=mu_0,sig2_0=True_sig)
 chart_name = chart.__class__.__name__
 print("Chart: " + chart_name)
 
 with open(f'results\multivar_{chart_name}_optimal_L.json') as json_file:
        L_arr = json.load(json_file)
 
-L = L_arr[str(f"p={4}")][str(phi)] 
+# L = L_arr[str(f"p={4}")][str(phi)] 
 # chart.change_L(L+18.6)
-# L = L_arr[str(f"p={x_p+1}")][str(phi)][str(phi2)] 
+L = L_arr[str(f"p={x_p+1}")][str(phi)][str(phi2)] 
 print('L: ',L)
 chart.change_L(L+12) 
 
@@ -96,8 +96,8 @@ chart.change_L(L+12)
 
 filepath = "./results/pm/"
 # filename = filepath + "/" + chart_name + "_ARL_SDRL_MRL_results.csv"
-filename = filepath + "/" + chart_name + "_pm_results_2.csv"
-ml_filename = filepath + "/" + chart_name + "_ml_data.csv"
+filename = filepath + "/" + chart_name + "_pm_results_3.csv"
+# ml_filename = filepath + "/" + chart_name + "_ml_data.csv"
 makedirs(filepath, exist_ok=True)
 
 ml_n = 100
@@ -113,9 +113,12 @@ output_df = pd.DataFrame(columns=['Parm','Delta','ARL','SDRL','MRL','Phi'])
 ml_df = pd.DataFrame(columns=['Parm','Delta','B0','B1','B2','S2','T2'])
 ic_count = 0
 # range(len(true_parms)+1)
-for p in range(len(true_parms)+1):
+
+# for p in range(len(true_parms)+1):
+for p in ["int","all"]:
     print("_"*30)
-    print(f"Parameter: {parm_names[p]}")
+    print(f"Parameter: {p}")
+    # print(f"Parameter: {parm_names[p]}")
     print("_"*30)
     for d in delta_arr:
         if (d==0)&(ic_count >0):
@@ -127,17 +130,34 @@ for p in range(len(true_parms)+1):
 
         if d==0:
             ic_count += 1
+        #individual parm
+        # if p < len(true_parms):
+        #     shift_vec = np.zeros(len(true_parms))
+        #     shift_vec[p] = d*np.sqrt(True_sig[p,p]) 
+        #     sim_parm = true_parms + shift_vec
+        #     sim_var = 1 #actually std
+        # else:
+        #     if d <= 1:
+        #         continue
+        #     sim_var = np.sqrt(true_var)*d #actually std
+        #     sim_parm = true_parms
 
-        if p < len(true_parms):
+
+        # dual parm
+        if p == 'int':
             shift_vec = np.zeros(len(true_parms))
-            shift_vec[p] = d*np.sqrt(True_sig[p,p]) 
+            shift_vec[[1,2]] = (d*np.ones((2)))@np.sqrt(True_sig[1:3,1:3]) 
+            # shift_vec[2] = d*np.sqrt(True_sig[2,2]) 
             sim_parm = true_parms + shift_vec
             sim_var = 1 #actually std
         else:
-            if d <= 1:
+            if d > 2:
                 continue
-            sim_var = np.sqrt(true_var)*d #actually std
-            sim_parm = true_parms
+            shift_vec = np.zeros(len(true_parms))
+            shift_vec[[1,2]] = (d*np.ones((2)))@np.sqrt(True_sig[1:3,1:3])
+            sim_parm = true_parms + shift_vec
+            sim_var = np.sqrt(true_var)*(d+1) #actually std
+        
         t_arr = []
         print("="*30)
         print(f"Parmeter list: {[sim_parm] + [sim_var]}")

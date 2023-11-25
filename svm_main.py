@@ -35,6 +35,8 @@ def convert_shift(x):
     else:
         return 3
 
+df.loc[df['Parm'] == 3, 'Delta'] -= 1
+
 df['Shift_size'] = [shift_sizes[convert_shift(x)] for x in df['Delta']]
 
 #SCALE PREDICTORS
@@ -71,7 +73,8 @@ True_sig[3,3] = 1
 # df['B2'] = (df['B2'] - means['B2'])/np.sqrt(parm_vars['B2'])
 # df['S2'] = (df['S2'] - means['S2'])/np.sqrt(parm_vars['S2'])
 
-print(df.tail())
+print(df[df['Parm']==3].head())
+print(df[df['Parm']==3].tail())
 
 #PARAMETER IDETIFIER
 X_train, X_test, id_y_train, id_y_test = train_test_split(df[['B0','B1','B2','S2']], df['Parm'], test_size=0.3,random_state=109) # 70% training and 30% test
