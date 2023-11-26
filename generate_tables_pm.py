@@ -8,15 +8,20 @@ import numpy as np
 schemes = ["MHWMA","EHWMA"]
 values = ['ARL','SDRL','MRL']
 results_dict = {}
-parm_names = {0:"B0",
-              1:"B1",
-              2:"B2",
-              3:"S2",
-              '-':'-'}
+parm_names = {'0':"B0",
+              "1":"B1",
+              "2":"B2",
+              "3":"S2",
+              '-':'-',
+              "int": "B1, B2",
+              "all": "B1, B2, S2"}
+
+set_id = 3
+
 for s in schemes:
-    df = pd.read_csv(f"results/pm/{s}_pm_results.csv")
+    df = pd.read_csv(f"results/pm/{s}_pm_results_{set_id}.csv")
     results_dict[s] = df[df['Delta'] != 0]
-    results_dict[s]['Parm'] = [parm_names[int(i)] for i in results_dict[s]['Parm']]
+    results_dict[s]['Parm'] = [parm_names[i] for i in results_dict[s]['Parm']]
     
 
 filepath = "./results/pm/tables"
@@ -57,12 +62,13 @@ for s in schemes:
     tbl = re.sub(r"S2",r"\\sigma",tbl)
     tbl = re.sub(r"\(",r"",tbl)
     tbl = re.sub(r"\)",r"",tbl)
+    tbl = re.sub(r" +",' ',tbl)
     
             
     
     # tbl = re.sub(r"\s+",' ',tbl)
     # tbl = re.sub("tabular","tabularx",tbl)
-    filename = filepath + "/" + s + f"_pm_table.txt"
+    filename = filepath + "/" + s + f"_pm_table_{set_id}.txt"
     with open(filename, "w") as f:
       print(tbl, file=f)
 
