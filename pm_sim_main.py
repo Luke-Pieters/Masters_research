@@ -66,21 +66,22 @@ def sig_transformed(x,x_n,x_p,true_var):
     return norm_q
 
 # Output 1
-# phi = 0.25
-# phi2 = 0.1
+phi = 0.25
+phi2 = 0.1
 # Output 2
-phi = 0.1
-phi2 = 0.09
-chart = spm_schemes.EHWMA(p=4,phi=phi,phi2=phi2,k=opt_k(phi),mean_0=mu_0,sig2_0=True_sig)
+# phi = 0.1
+# phi2 = 0.09
+
+chart = spm_schemes.MHWMA(p=4,phi=phi,phi2=phi2,k=opt_k(phi),mean_0=mu_0,sig2_0=True_sig)
 chart_name = chart.__class__.__name__
 print("Chart: " + chart_name)
 
 with open(f'results\multivar_{chart_name}_optimal_L.json') as json_file:
        L_arr = json.load(json_file)
 
-# L = L_arr[str(f"p={4}")][str(phi)] 
+L = L_arr[str(f"p={4}")][str(phi)] 
 # chart.change_L(L+18.6)
-L = L_arr[str(f"p={x_p+1}")][str(phi)][str(phi2)] 
+# L = L_arr[str(f"p={x_p+1}")][str(phi)][str(phi2)] 
 print('L: ',L)
 chart.change_L(L+12) 
 
@@ -96,7 +97,7 @@ chart.change_L(L+12)
 
 filepath = "./results/pm/"
 # filename = filepath + "/" + chart_name + "_ARL_SDRL_MRL_results.csv"
-filename = filepath + "/" + chart_name + "_pm_results_3.csv"
+filename = filepath + "/" + chart_name + "_pm_results_4.csv"
 # ml_filename = filepath + "/" + chart_name + "_ml_data.csv"
 makedirs(filepath, exist_ok=True)
 
