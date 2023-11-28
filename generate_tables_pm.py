@@ -16,7 +16,7 @@ parm_names = {'0':"B0",
               "int": "B1, B2",
               "all": "B1, B2, S2"}
 
-set_id = 3
+set_id = 4
 
 for s in schemes:
     df = pd.read_csv(f"results/pm/{s}_pm_results_{set_id}.csv")

@@ -160,7 +160,7 @@ filepath = "./results/pm/tables"
 makedirs(filepath, exist_ok=True)
 
 cols = ['t','B0','B1','B2','S2']
-col_symb = ['t','$\\beta_0$','$\\beta_1$','$\\beta_2$','$\\sigma^2$']
+col_symb = ['t','$Z_t (\\hat{\\beta}_0)$','$Z_t (\\hat{\\beta}_1)$','$Z_t (\\hat{\\beta}_2)$','$Z_t (\\hat{\\sigma}^2)$']
 col_symb = ["{\color[HTML]{FFFFFF}" + x + "}" for x in col_symb]
 
 spacing = "{ | " + ">{\\\\centering\\\\arraybackslash}m{0.03\\\\textwidth} | " + ">{\\\\centering\\\\arraybackslash}m{0.09\\\\textwidth} "*(len(cols)-1) + " | }"
@@ -276,6 +276,7 @@ tbl = str(tabulate(mod_tbl,col_symb,tablefmt="latex_raw",floatfmt=float_fmt,show
 tbl = re.sub(r"\{rrrrrrlll\}",spacing,tbl)
 tbl = re.sub(r"True",r"{\\color[HTML]{B2182B}True}",tbl)
 tbl = re.sub(r"\\hline",r"\\hline \\rowcolor[HTML]{4A6FCC} ",tbl,count=1)
+tbl = re.sub(r" +",' ',tbl)
 
 filename = filepath + "/" + "_example_mod_chart_table.txt"
 with open(filename, "w") as f:
@@ -285,6 +286,7 @@ tbl = str(tabulate(ex_tbl,col_symb,tablefmt="latex_raw",floatfmt=float_fmt,showi
 tbl = re.sub(r"\{rrrrrrlll\}",spacing,tbl)
 tbl = re.sub(r"True",r"{\\color[HTML]{B2182B}True}",tbl)
 tbl = re.sub(r"\\hline",r"\\hline \\rowcolor[HTML]{4A6FCC} ",tbl,count=1)
+tbl = re.sub(r" +",' ',tbl)
 
 filename = filepath + "/" + "_example_ex_chart_table.txt"
 with open(filename, "w") as f:

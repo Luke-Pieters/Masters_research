@@ -107,6 +107,7 @@ tbl = re.sub(r"\{r+l\}",spacing,tbl)
 tbl = re.sub(r"X\d{2}","",tbl)
 tbl = re.sub(r"True",r"{\\color[HTML]{B2182B}True}",tbl)
 tbl = re.sub(r"\\hline",r"\\hline \\rowcolor[HTML]{4A6FCC} ",tbl,count=1)
+tbl = re.sub(r" +",' ',tbl)
 print(tbl)
 
 filename = filepath + "/" + "bivar_example_ex_chart_table.txt"
@@ -133,6 +134,7 @@ tbl = str(tabulate(df,col_symb,tablefmt="latex_raw",floatfmt=float_fmt,showindex
 tbl = re.sub(r"\{r+\}",spacing,tbl)
 tbl = re.sub(r"X\d{2}","",tbl)
 tbl = re.sub(r"\\hline",r"\\hline \\rowcolor[HTML]{4A6FCC} ",tbl,count=1)
+tbl = re.sub(r" +",' ',tbl)
 print(tbl)
 
 filename = filepath + "/" + "bivar_example_raw_table.txt"
