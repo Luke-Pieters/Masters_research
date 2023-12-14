@@ -1,0 +1,18 @@
+\begin{tabular}{ | >{\centering\arraybackslash}m{0.03\textwidth} | >{\centering\arraybackslash}m{0.09\textwidth} >{\centering\arraybackslash}m{0.09\textwidth} >{\centering\arraybackslash}m{0.09\textwidth} >{\centering\arraybackslash}m{0.09\textwidth}  | }
+\hline \rowcolor[HTML]{4A6FCC} 
+   {\color[HTML]{FFFFFF}$\boldsymbol{\delta}$} &   {\color[HTML]{FFFFFF}$\boldsymbol{\phi_1=0.1}$} &   {\color[HTML]{FFFFFF}$\boldsymbol{\phi_1=0.25}$} &   {\color[HTML]{FFFFFF}$\boldsymbol{\phi_1=0.5}$} &   {\color[HTML]{FFFFFF}$\boldsymbol{\phi_1=0.9}$} \\
+\hline
+                                           0.2 &                                              57.1 &                                               82.0 &                                             112.8 &                                             145.0 \\
+                                           0.5 &                                              16.6 &                                               26.4 &                                              44.8 &                                              78.4 \\
+                                           0.8 &                                               7.6 &                                               11.0 &                                              19.4 &                                              40.7 \\
+                                           1.0 &                                               4.3 &                                                5.7 &                                               9.8 &                                              22.3 \\
+                                           1.2 &                                               2.8 &                                                3.4 &                                               5.5 &                                              12.8 \\
+                                           1.5 &                                               2.0 &                                                2.3 &                                               3.4 &                                               7.8 \\
+                                           1.8 &                                               1.5 &                                                1.7 &                                               2.3 &                                               4.9 \\
+                                           2.0 &                                               1.2 &                                                1.3 &                                               1.7 &                                               3.3 \\
+                                           2.2 &                                               1.0 &                                                1.1 &                                               1.3 &                                               2.3 \\
+                                           2.5 &                                               0.8 &                                                0.9 &                                               1.0 &                                               1.7 \\
+                                           2.8 &                                               0.7 &                                                0.7 &                                               0.8 &                                               1.2 \\
+                                           3.0 &                                               0.6 &                                                0.6 &                                               0.7 &                                               0.9 \\
+\hline
+\end{tabular}

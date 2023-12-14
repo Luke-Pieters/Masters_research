@@ -1,0 +1,18 @@
+\begin{tabular}{ | >{\centering\arraybackslash}m{0.03\textwidth} | >{\centering\arraybackslash}m{0.09\textwidth} >{\centering\arraybackslash}m{0.09\textwidth}  | }
+\hline \rowcolor[HTML]{4A6FCC} 
+   {\color[HTML]{FFFFFF}$\boldsymbol{\delta}$} &   {\color[HTML]{FFFFFF}$\boldsymbol{\phi_1=0.1}$} &   {\color[HTML]{FFFFFF}$\boldsymbol{\phi_1=0.25}$} \\
+\hline
+                                          0.25 &                                              52.0 &                                               59.0 \\
+                                          0.50 &                                              22.0 &                                               25.0 \\
+                                          0.75 &                                              13.0 &                                               15.0 \\
+                                          1.00 &                                               9.0 &                                               10.0 \\
+                                          1.25 &                                               7.0 &                                                7.0 \\
+                                          1.50 &                                               6.0 &                                                6.0 \\
+                                          1.75 &                                               5.0 &                                                5.0 \\
+                                          2.00 &                                               4.0 &                                                4.0 \\
+                                          2.25 &                                               4.0 &                                                4.0 \\
+                                          2.50 &                                               3.0 &                                                3.0 \\
+                                          2.75 &                                               1.0 &                                                3.0 \\
+                                          3.00 &                                               1.0 &                                                1.0 \\
+\hline
+\end{tabular}

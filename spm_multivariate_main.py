@@ -20,7 +20,7 @@ log = logging.getLogger(__name__)
 #==========================================================================
 
 #ITERATE PARAMETERS
-n=20000
+n=30000
 tau = 1 
 
 #CHART TO TEST
@@ -124,7 +124,7 @@ start_time = time()
 
 for d in delta:
     #DISTRIBUTION TO SAMPLE FROM 
-    ds = np.ones(p)@np.array([np.sqrt((d**2)/p)]*p)
+    ds = np.sqrt((d**2)/p)
     dist = sts.norm(loc=ds,scale=1)
     print('========================')
     print("Delta: {:.2f}".format(d))

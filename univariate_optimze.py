@@ -1,6 +1,8 @@
 import spm_sim_module as sim
 import Schemes_module as spm_schemes
 import logging
+import json
+from numpy import round
 
 from datetime import datetime
 now = datetime.now()
@@ -15,7 +17,7 @@ logging.basicConfig(filename=f"logs/Log-{current_time}",
                     level=logging.DEBUG)
 
 #CHART TO TEST
-chart = spm_schemes.MHWMA()
+chart = spm_schemes.EEWMA()
 chart_name = chart.__class__.__name__
 
 print("Chart: " + chart_name)
@@ -23,8 +25,15 @@ print("Chart: " + chart_name)
 initial_L = 2.5
 
 #CHART PARAMETERS 
-phi_arr = [0.1,0.25,0.5,0.9]
-# phi2_arr = {0.5: [0.1,0.2,0.4],
+phi_arr = [0.25]
+
+phi2_arr = {0.1: [0.01,0.05,0.09],
+            0.25: [0.2],
+            0.5: [0.1,0.2,0.4],
+            0.9: [0.2,0.5,0.8]} 
+# phi2_arr = {0.1: [0.01,0.05,0.09],
+#             0.25: [0.05,0.1,0.2],
+#             0.5: [0.1,0.2,0.4],
 #             0.9: [0.2,0.5,0.8]} 
 
 opt_k = lambda x: -x/2
@@ -33,14 +42,24 @@ phi_parm = []
 # k_parm = []
 L_value = []
 
+with open(f'results\{chart_name}_optimal_L.json') as json_file:
+    L_arr = json.load(json_file)
+
 for phi in phi_arr:
-    k = opt_k(phi)
-    logging.info(f"Running Optimize for {chart_name}({phi},{k})")
-    chart.change_parameters(phi=phi,k=k)
-    res = sim.spm_optimize_L(chart_obj=chart,initial_L=initial_L,n=10000,tol=10)
-        
-    logging.info(f'Optimal L for {chart_name}({phi},{k}):  {res}')
-    print(f'Optimal L for {chart_name}({phi},{k}):  {res}')
+    for phi2 in phi2_arr[phi]:
+        k = opt_k(phi)
+        logging.info(f"Running Optimize for {chart_name}({phi},{k})")
+        chart.change_parameters(phi=phi,phi2=phi2)
+        initial_L = L_arr[str(phi)][str(phi2)]
+        # initial_L = L_arr[str(phi)][str(phi2)]
+        res = sim.spm_optimize_L(chart_obj=chart,initial_L=initial_L,n=50000,tol=1)
+            
+        logging.info(f'Optimal L for {chart_name}({phi},{phi2}):  {res}')
+        print(f'Optimal L for {chart_name}({phi},{phi2}):  {res}')
+        L_arr[str(phi)][str(phi2)] = round(res[0],5)
+
+        with open(f'results\{chart_name}_optimal_L.json', 'w') as json_file:
+            json.dump(L_arr, json_file)
 
 logging.info(f'Optimization Complete for {chart_name}')
 print('Optimization Complete')

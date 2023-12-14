@@ -83,12 +83,16 @@ def spm_iterate(n,chart_obj,distribution,tau=1,L=None,standardise=False,seed=123
     ARL = np.mean(t_arr)
     SDRL = np.std(t_arr)
     MRL = np.median(t_arr)
+    MIN = np.quantile(t_arr,0.05)
+    MAX = np.quantile(t_arr,0.95)
+    Q25 = np.quantile(t_arr,0.25)
+    Q75 = np.quantile(t_arr,0.75)
     printProgressBar(iteration=n,total=n,prefix='Iterate Progress')
  
     run_time =np.round(time()-start_time+0.4,decimals=0)
     print("Time: {} ".format(timedelta(seconds=run_time)))
     
-    return {'ARL':ARL,'SDRL':SDRL,'MRL':MRL}
+    return {'ARL':ARL,'SDRL':SDRL,'MRL':MRL,'MIN':MIN,'MAX':MAX,'Q25':Q25,'Q75':Q75}
     # print(len(xt_arr))
     # return t_arr,xt_arr
         

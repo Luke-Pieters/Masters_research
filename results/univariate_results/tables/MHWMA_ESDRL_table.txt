@@ -1,0 +1,12 @@
+\begin{tabular}{ | >{\centering\arraybackslash}m{0.03\textwidth} | >{\centering\arraybackslash}m{0.09\textwidth} >{\centering\arraybackslash}m{0.09\textwidth} >{\centering\arraybackslash}m{0.09\textwidth} >{\centering\arraybackslash}m{0.09\textwidth}  | }
+\hline \rowcolor[HTML]{4A6FCC} 
+            &   {\color[HTML]{FFFFFF}$\boldsymbol{\phi_1=0.1}$} &   {\color[HTML]{FFFFFF}$\boldsymbol{\phi_1=0.25}$} &   {\color[HTML]{FFFFFF}$\boldsymbol{\phi_1=0.5}$} &   {\color[HTML]{FFFFFF}$\boldsymbol{\phi_1=0.9}$} \\
+\hline
+ ESDRL(0,1) &                                              16.2 &                                               19.0 &                                              30.0 &                                              52.6 \\
+ ESDRL(0,2) &                                               9.3 &                                               10.7 &                                              16.3 &                                              28.3 \\
+ ESDRL(0,3) &                                               6.6 &                                                7.6 &                                              11.3 &                                              19.2 \\
+ ESDRL(1,2) &                                               2.3 &                                                2.3 &                                               2.6 &                                               4.0 \\
+ ESDRL(1,3) &                                               1.8 &                                                1.8 &                                               1.9 &                                               2.5 \\
+ ESDRL(2,3) &                                               1.3 &                                                1.4 &                                               1.2 &                                               1.1 \\
+\hline
+\end{tabular}
